@@ -5,10 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Optional;
 
@@ -33,7 +30,7 @@ public class Message {
         return Optional.ofNullable(content);
     }
 
-    public static Message of(String content) {
+    public static Message of(@NonNull String content) {
         return Message.builder()
                 .id(NanoIdUtils.randomNanoId())
                 .content(content)
