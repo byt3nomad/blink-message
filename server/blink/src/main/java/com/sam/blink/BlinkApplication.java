@@ -1,5 +1,6 @@
 package com.sam.blink;
 
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

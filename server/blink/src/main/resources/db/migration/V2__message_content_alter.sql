@@ -1,0 +1,1 @@
+ALTER TABLE message RENAME message TO content;
