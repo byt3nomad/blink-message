@@ -1,10 +1,9 @@
-package com.sam.blink.message;
+package com.sam.blink.model;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.*;
 
 import java.util.Optional;
@@ -28,6 +27,11 @@ public class Message {
 
     public Optional<String> getContent() {
         return Optional.ofNullable(content);
+    }
+
+    public void open(){
+        this.opened = true;
+        this.content = null;
     }
 
     public static Message of(@NonNull String content) {

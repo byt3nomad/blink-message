@@ -1,4 +1,4 @@
-package com.sam.blink.message;
+package com.sam.blink.model.dto;
 
 import lombok.NonNull;
 
