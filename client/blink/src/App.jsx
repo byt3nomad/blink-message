@@ -9,7 +9,7 @@ function App() {
           <Heading size="md">Message</Heading>
         </Card.Header>
         <Card.Body>
-          <Textarea size="md" resize="none" placeholder="Start typing..." />
+          <Textarea size={"lg"} resize="none" placeholder="Start typing..." />
         </Card.Body>
         <Card.Footer justifyContent="flex-end">
           <Button>Create link</Button>
