@@ -1,30 +1,46 @@
-import { Card, Heading, Textarea, VStack } from "@chakra-ui/react";
-import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
+import { useState } from "react";
+import axios from "axios";
+import MessageForm from "../components/MessageForm";
 
 function CreateMessage() {
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [responseId, setResponseId] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setSubmitting(true);
+    e.preventDefault();
+
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/messages`;
+    try {
+      const response = await axios.post(url, {
+        content: message,
+      });
+
+      if (response.data && response.data.id) {
+        setResponseId(response.data.id);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    setSubmitting(false);
+    setMessage("");
+  };
+
   return (
-    <VStack px={4} pt={10}>
-      <Card.Root maxW="700px" w="full" size="sm">
-        <form>
-          <Card.Header>
-            <Heading size="md">Message</Heading>
-          </Card.Header>
-          <Card.Body>
-            <Field required>
-              <Textarea
-                size={"lg"}
-                resize="none"
-                placeholder="Start typing..."
-              />
-            </Field>
-          </Card.Body>
-          <Card.Footer justifyContent="flex-end">
-            <Button type="submit">Create link</Button>
-          </Card.Footer>
-        </form>
-      </Card.Root>
-    </VStack>
+    <>
+      {!responseId ? (
+        <MessageForm
+          message={message}
+          onMessageChange={setMessage}
+          onSubmit={handleSubmit}
+          submitting={submitting}
+        />
+      ) : (
+        <>{responseId}</>
+      )}
+    </>
   );
 }
 
