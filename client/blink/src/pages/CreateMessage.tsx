@@ -2,7 +2,7 @@ import { Card, Heading, Textarea, VStack } from "@chakra-ui/react";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 
-function App() {
+function CreateMessage() {
   return (
     <VStack px={4} pt={10}>
       <Card.Root maxW="700px" w="full" size="sm">
@@ -28,4 +28,4 @@ function App() {
   );
 }
 
-export default App;
+export default CreateMessage;
