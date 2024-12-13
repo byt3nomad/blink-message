@@ -1,3 +1,5 @@
+interface MessageUrlProps {}
+
 const MessageUrl = () => {
   return <></>;
 };
