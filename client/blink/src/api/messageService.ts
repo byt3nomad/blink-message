@@ -1,5 +1,5 @@
 import { getErrorMessage } from "@/util/util";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 const client = axios.create({
   baseURL: `${import.meta.env.VITE_API_BASE_URL}/api/v1/`,
