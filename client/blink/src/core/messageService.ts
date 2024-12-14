@@ -1,4 +1,4 @@
-import { getErrorMessage } from "@/util/util";
+import { getErrorMessage } from "@/core/util";
 import axios from "axios";
 
 const client = axios.create({

@@ -1,9 +1,10 @@
-import messageService from "@/api/messageService";
+import messageService from "@/core/messageService";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Card, Heading, Textarea, VStack } from "@chakra-ui/react";
 import { useState } from "react";
+import { generateKey } from "@/core/cryptoService";
 
 interface MessageFormProps {
   onSuccess: (messageId: string) => void;
@@ -19,13 +20,16 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
     e.preventDefault();
 
     setError(null);
-    const response = await messageService.createMessage(message);
+    const key = await generateKey();
+    const value = (await window.crypto.subtle.exportKey("jwk", key)).k;
+    console.log(value);
+    // const response = await messageService.createMessage(message);
 
-    if (response.success) {
-      onSuccess(response.data);
-    } else {
-      setError(response.error);
-    }
+    // if (response.success) {
+    //   onSuccess(response.data);
+    // } else {
+    //   setError(response.error);
+    // }
 
     setSubmitting(false);
     setMessage("");
