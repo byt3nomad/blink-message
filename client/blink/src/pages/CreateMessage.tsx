@@ -1,8 +1,8 @@
+import CopyMessageUrl from "@/components/CopyMessageUrl";
 import { useState } from "react";
 import CreateMessageForm, {
   CreatedMessage,
 } from "../components/CreateMessageForm";
-import CopyMessageUrl from "@/components/CopyMessageUrl";
 
 function CreateMessage() {
   const [createdMessage, setCreatedMessage] = useState<CreatedMessage | null>(

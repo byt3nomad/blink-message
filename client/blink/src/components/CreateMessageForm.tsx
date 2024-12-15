@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { encryptMessage } from "@/core/cryptoService";
 import messageService from "@/core/messageService";
-import { Card, Heading, Textarea, VStack } from "@chakra-ui/react";
+import { Card, Heading, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 
 export type CreatedMessage = {
@@ -37,7 +37,7 @@ const CreateMessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
     setMessage("");
   };
   return (
-    <VStack px={4} pt={10}>
+    <>
       <Card.Root maxW="700px" w="full" size="sm">
         <form onSubmit={handleSubmit}>
           <Card.Header>
@@ -69,7 +69,7 @@ const CreateMessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
           title={`There was an error processing your request: ${error}`}
         />
       )}
-    </VStack>
+    </>
   );
 };
 
