@@ -1,14 +1,19 @@
-import messageService from "@/core/messageService";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
+import { encryptMessage } from "@/core/cryptoService";
+import messageService from "@/core/messageService";
 import { Card, Heading, Textarea, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import { generateKey } from "@/core/cryptoService";
 
 interface MessageFormProps {
-  onSuccess: (messageId: string) => void;
+  onSuccess: (createdMessage: CreatedMessage) => void;
 }
+
+export type CreatedMessage = {
+  id: string;
+  key: string;
+};
 
 const MessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
   const [message, setMessage] = useState("");
@@ -20,16 +25,15 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
     e.preventDefault();
 
     setError(null);
-    const key = await generateKey();
-    const value = (await window.crypto.subtle.exportKey("jwk", key)).k;
-    console.log(value);
-    // const response = await messageService.createMessage(message);
+    const { encryptedMessage, key, iv } = await encryptMessage(message);
 
-    // if (response.success) {
-    //   onSuccess(response.data);
-    // } else {
-    //   setError(response.error);
-    // }
+    const response = await messageService.createMessage(encryptedMessage, iv);
+
+    if (response.success) {
+      onSuccess({ id: response.messageId, key });
+    } else {
+      setError(response.error);
+    }
 
     setSubmitting(false);
     setMessage("");

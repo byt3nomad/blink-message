@@ -8,7 +8,7 @@ const client = axios.create({
 
 type SuccessResult = {
   success: true;
-  data: string;
+  messageId: string;
 };
 
 type ErrorResult = {
@@ -19,11 +19,14 @@ type ErrorResult = {
 export type MessageResult = SuccessResult | ErrorResult;
 
 const messageService = {
-  createMessage: async (message: string): Promise<MessageResult> => {
+  createMessage: async (
+    encryptedMessage: string,
+    iv: string
+  ): Promise<MessageResult> => {
     try {
-      const response = await client.post("messages", { content: message });
+      const response = await client.post("messages", { encryptedMessage, iv });
       if (response.data && response.data.id) {
-        return { success: true, data: response.data.id };
+        return { success: true, messageId: response.data.id };
       }
       throw new Error("No message id");
     } catch (e) {

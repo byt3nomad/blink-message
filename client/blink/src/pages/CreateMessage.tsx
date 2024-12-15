@@ -1,12 +1,10 @@
 import { useState } from "react";
-import MessageForm from "../components/MessageForm";
+import MessageForm, { CreatedMessage } from "../components/MessageForm";
 
 function CreateMessage() {
   const [messageId, setMessageId] = useState<string | null>(null);
 
-  const handleOnSuccess = (messageId: string) => {
-    setMessageId(messageId);
-  };
+  const handleOnSuccess = (encryptedMessage: CreatedMessage) => {};
 
   return (
     <>

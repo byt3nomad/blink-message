@@ -1,7 +1,50 @@
 const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 
-const generateKey = async () => {
-  return await window.crypto.subtle.generateKey(
+const importKey = async (jsonKey: string) => {
+  return await window.crypto.subtle.importKey(
+    "jwk",
+    {
+      alg: "A256GCM",
+      ext: true,
+      k: jsonKey,
+      key_ops: ["encrypt", "decrypt"],
+      kty: "oct",
+    },
+    "AES-GCM",
+    true,
+    ["encrypt", "decrypt"]
+  );
+};
+
+const encodeBase64 = (buffer: ArrayBuffer | Uint8Array): string => {
+  let view = buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : buffer;
+  const text = String.fromCharCode(...view);
+  return btoa(text);
+};
+
+const decodeBase64 = (text: string): Uint8Array<ArrayBuffer> => {
+  const decodedText = atob(text);
+  const byteArray = new Uint8Array(decodedText.length);
+
+  for (let i = 0; i < decodedText.length; i++) {
+    byteArray[i] = decodedText.charCodeAt(i);
+  }
+
+  return byteArray;
+};
+
+export type EncryptedMessageResult = {
+  key: string;
+  encryptedMessage: string;
+  iv: string;
+};
+
+export const encryptMessage = async (
+  content: string
+): Promise<EncryptedMessageResult> => {
+  const encodedMessage = encoder.encode(content);
+  const key = await window.crypto.subtle.generateKey(
     {
       name: "AES-GCM",
       length: 256,
@@ -9,16 +52,17 @@ const generateKey = async () => {
     true,
     ["encrypt", "decrypt"]
   );
-};
-
-export const encryptMessage = async (message: string) => {
-  const encoded = encoder.encode(message);
-  const key = await generateKey();
-
   const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
   const encryptedMessage = await window.crypto.subtle.encrypt(
     { name: "AES-GCM", iv: iv },
     key,
-    encoded
+    encodedMessage
   );
+
+  return {
+    encryptedMessage: encodeBase64(encryptedMessage),
+    iv: encodeBase64(iv),
+    key: (await window.crypto.subtle.exportKey("jwk", key)).k || "",
+  };
 };
