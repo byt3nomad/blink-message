@@ -1,6 +1,5 @@
 package com.sam.blink.model;
 
-import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -18,27 +17,22 @@ public class Message {
     @Getter
     private String id;
 
+    @Setter
+    @Column(name = "encrypted_message")
+    private String encryptedMessage;
+
+    @Setter
     @Column
-    private String content;
+    private String iv;
 
     @Getter
+    @Setter
     @Column(name = "is_opened")
     private boolean opened;
 
-    public Optional<String> getContent() {
-        return Optional.ofNullable(content);
+    public Optional<String> getEncryptedMessage() {
+        return Optional.ofNullable(encryptedMessage);
     }
 
-    public void open(){
-        this.opened = true;
-        this.content = null;
-    }
-
-    public static Message of(@NonNull String content) {
-        return Message.builder()
-                .id(NanoIdUtils.randomNanoId())
-                .content(content)
-                .opened(false)
-                .build();
-    }
+    public Optional<String> getIv() {return Optional.ofNullable(iv);}
 }

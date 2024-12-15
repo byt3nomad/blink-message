@@ -1,4 +1,6 @@
 package com.sam.blink.model.dto;
 
-public record MessageOpenResponse(String content) {
+import lombok.NonNull;
+
+public record MessageOpenResponse(@NonNull String encryptedMessage, @NonNull String iv) {
 }

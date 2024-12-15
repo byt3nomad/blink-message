@@ -1,12 +1,14 @@
 package com.sam.blink.controller;
 
-import com.sam.blink.exception.MessageNotFoundException;
 import com.sam.blink.model.dto.MessageCreateRequest;
 import com.sam.blink.model.dto.MessageCreateResponse;
 import com.sam.blink.model.dto.MessageOpenResponse;
 import com.sam.blink.service.MessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor

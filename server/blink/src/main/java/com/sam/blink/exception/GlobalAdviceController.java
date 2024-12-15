@@ -6,13 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @RestControllerAdvice
 public class GlobalAdviceController {
-    @ExceptionHandler(MessageNotFoundException.class)
+    @ExceptionHandler(MessageNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionResponse handleMessageNotFoundException(MessageNotFoundException e) {
+    public ExceptionResponse handleMessageNotFoundException(MessageNotFound e) {
         return new ExceptionResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Message not found!",
@@ -25,6 +24,15 @@ public class GlobalAdviceController {
         return new ExceptionResponse(
                 HttpStatus.GONE.value(),
                 "Message already opened!",
+                LocalDateTime.now());
+    }
+
+    @ExceptionHandler(InvalidMessageData.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleInvalidMessageData(InvalidMessageData e) {
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid message data!",
                 LocalDateTime.now());
     }
 
