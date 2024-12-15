@@ -23,10 +23,9 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setSubmitting(true);
     e.preventDefault();
-
     setError(null);
-    const { encryptedMessage, key, iv } = await encryptMessage(message);
 
+    const { encryptedMessage, key, iv } = await encryptMessage(message);
     const response = await messageService.createMessage(encryptedMessage, iv);
 
     if (response.success) {
