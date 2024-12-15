@@ -12,6 +12,9 @@ function CreateMessage() {
   const handleOnSuccess = (createdMessage: CreatedMessage) => {
     setCreatedMessage(createdMessage);
   };
+  const handleCreateNewMessageClicked = () => {
+    setCreatedMessage(null);
+  };
 
   return (
     <>
@@ -19,8 +22,9 @@ function CreateMessage() {
         <CreateMessageForm onSuccess={handleOnSuccess} />
       ) : (
         <CopyMessageUrl
-          encryptionKey={"0LCavKbaMwpBbRUQ-YyA1o1zPcQtccSueGURlzVDF2Q"}
-          messageId={"jDFXG1pu2qVZULuJz-vIL"}
+          createNewMessageClicked={handleCreateNewMessageClicked}
+          encryptionKey={createdMessage.key}
+          messageId={createdMessage.id}
         />
       )}
     </>

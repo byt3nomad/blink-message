@@ -6,15 +6,14 @@ import messageService from "@/core/messageService";
 import { Card, Heading, Textarea, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
-interface MessageFormProps {
-  onSuccess: (createdMessage: CreatedMessage) => void;
-}
-
 export type CreatedMessage = {
   id: string;
   key: string;
 };
 
+interface MessageFormProps {
+  onSuccess: (createdMessage: CreatedMessage) => void;
+}
 const CreateMessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
