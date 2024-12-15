@@ -15,7 +15,7 @@ export type CreatedMessage = {
   key: string;
 };
 
-const MessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
+const CreateMessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -74,4 +74,4 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
   );
 };
 
-export default MessageForm;
+export default CreateMessageForm;

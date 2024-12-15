@@ -1,17 +1,27 @@
 import { useState } from "react";
-import MessageForm, { CreatedMessage } from "../components/MessageForm";
+import CreateMessageForm, {
+  CreatedMessage,
+} from "../components/CreateMessageForm";
+import CopyMessageUrl from "@/components/CopyMessageUrl";
 
 function CreateMessage() {
-  const [messageId, setMessageId] = useState<string | null>(null);
+  const [createdMessage, setCreatedMessage] = useState<CreatedMessage | null>(
+    null
+  );
 
-  const handleOnSuccess = (encryptedMessage: CreatedMessage) => {};
+  const handleOnSuccess = (createdMessage: CreatedMessage) => {
+    setCreatedMessage(createdMessage);
+  };
 
   return (
     <>
-      {!messageId ? (
-        <MessageForm onSuccess={handleOnSuccess} />
+      {!createdMessage ? (
+        <CreateMessageForm onSuccess={handleOnSuccess} />
       ) : (
-        <>{messageId}</>
+        <CopyMessageUrl
+          encryptionKey={"0LCavKbaMwpBbRUQ-YyA1o1zPcQtccSueGURlzVDF2Q"}
+          messageId={"jDFXG1pu2qVZULuJz-vIL"}
+        />
       )}
     </>
   );
