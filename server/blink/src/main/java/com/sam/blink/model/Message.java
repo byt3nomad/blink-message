@@ -31,8 +31,9 @@ public class Message {
     @Column(name = "is_opened")
     private boolean opened;
 
+    @Getter
     @Setter
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
     @Setter
@@ -43,7 +44,11 @@ public class Message {
         return Optional.ofNullable(encryptedMessage);
     }
 
-    public Optional<String> getIv() {return Optional.ofNullable(iv);}
-    public Optional<Instant> getCreatedAt() {return Optional.ofNullable(createdAt);}
-    public Optional<Instant> getOpenedAt() {return Optional.ofNullable(openedAt);}
+    public Optional<String> getIv() {
+        return Optional.ofNullable(iv);
+    }
+
+    public Optional<Instant> getOpenedAt() {
+        return Optional.ofNullable(openedAt);
+    }
 }

@@ -39,11 +39,10 @@ public class MessageService {
                 .findById(id)
                 .orElseThrow(MessageNotFound::new);
 
-        var createdAt = message.getCreatedAt().orElseThrow(InvalidMessageData::new).toEpochMilli();
         var messageResponseBuilder = MessageInfoResponse.builder()
                 .id(message.getId())
                 .opened(message.isOpened())
-                .createdAt(createdAt);
+                .createdAt(message.getCreatedAt().toEpochMilli());
         if(message.isOpened()) {
             // If opened we will have openedAt time.
             var openedAt = message.getOpenedAt().orElseThrow(InvalidMessageData::new).toEpochMilli();
