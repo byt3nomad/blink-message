@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Entity
@@ -30,9 +31,19 @@ public class Message {
     @Column(name = "is_opened")
     private boolean opened;
 
+    @Setter
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @Setter
+    @Column(name = "opened_at")
+    private Instant openedAt;
+
     public Optional<String> getEncryptedMessage() {
         return Optional.ofNullable(encryptedMessage);
     }
 
     public Optional<String> getIv() {return Optional.ofNullable(iv);}
+    public Optional<Instant> getCreatedAt() {return Optional.ofNullable(createdAt);}
+    public Optional<Instant> getOpenedAt() {return Optional.ofNullable(openedAt);}
 }
