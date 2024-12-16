@@ -6,7 +6,7 @@ const client = axios.create({
   timeout: 2000,
 });
 
-type SuccessResult = {
+type MessageCreateSuccess = {
   success: true;
   messageId: string;
 };
@@ -16,13 +16,22 @@ type ErrorResult = {
   error: string;
 };
 
-export type MessageResult = SuccessResult | ErrorResult;
+export type MessageCreateResult = MessageCreateSuccess | ErrorResult;
+
+type MessageInfoSuccess = {
+  success: true;
+  opened: boolean;
+  createdAt: number;
+  openedAt: number | null;
+};
+
+export type MessageInfoResult = MessageInfoSuccess | ErrorResult;
 
 const messageService = {
   createMessage: async (
     encryptedMessage: string,
     iv: string
-  ): Promise<MessageResult> => {
+  ): Promise<MessageCreateResult> => {
     try {
       const response = await client.post("messages", { encryptedMessage, iv });
       if (response.data && response.data.id) {
@@ -30,6 +39,29 @@ const messageService = {
       }
       throw new Error("No message id");
     } catch (e) {
+      return {
+        success: false,
+        error: getErrorMessage(e),
+      };
+    }
+  },
+  getMessageInfo: async (messageId: string): Promise<MessageInfoResult> => {
+    try {
+      const response = await client.get(`messages/${messageId}/info`);
+
+      return {
+        success: true,
+        opened: response.data.opened,
+        createdAt: response.data.createdAt,
+        openedAt: response.data.openedAt,
+      };
+    } catch (e: any) {
+      if (e.response && e.response.data?.message) {
+        return {
+          success: false,
+          error: `Message with id ${messageId} was not found!`,
+        };
+      }
       return {
         success: false,
         error: getErrorMessage(e),
