@@ -2,9 +2,9 @@ import { Provider } from "@/components/ui/provider";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
-import CreateMessage from "./pages/CreateMessage";
-import OpenMessage from "./pages/OpenMessage";
 import Layout from "./components/Layout";
+import CreateMessagePage from "./pages/CreateMessagePage";
+import OpenMessagePage from "./pages/OpenMessagePage";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -12,8 +12,8 @@ createRoot(document.getElementById("root")!).render(
       <Provider>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<CreateMessage />} />
-            <Route path="/open" element={<OpenMessage />} />
+            <Route index element={<CreateMessagePage />} />
+            <Route path=":messageId" element={<OpenMessagePage />} />
           </Route>
         </Routes>
       </Provider>

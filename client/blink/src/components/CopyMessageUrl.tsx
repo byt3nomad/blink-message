@@ -15,7 +15,7 @@ const CopyMessageUrl: React.FC<MessageUrlProps> = ({
   createNewMessageClicked: createNewMessage,
 }) => {
   const origin = window.location.origin;
-  const openMessageUrl = `${origin}/open#${messageId}/${encryptionKey}`;
+  const openMessageUrl = `${origin}/${messageId}#${encryptionKey}`;
   const handleCreateNewMessageButton = () => {
     createNewMessage();
   };

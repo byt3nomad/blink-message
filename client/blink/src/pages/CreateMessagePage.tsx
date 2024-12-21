@@ -4,7 +4,7 @@ import CreateMessageForm, {
   CreatedMessage,
 } from "../components/CreateMessageForm";
 
-function CreateMessage() {
+function CreateMessagePage() {
   const [createdMessage, setCreatedMessage] = useState<CreatedMessage | null>(
     null
   );
@@ -31,4 +31,4 @@ function CreateMessage() {
   );
 }
 
-export default CreateMessage;
+export default CreateMessagePage;

@@ -10,38 +10,33 @@ import {
 } from "@/components/ui/timeline";
 import messageService, { MessageInfoResult } from "@/core/messageService";
 import { formatDate } from "@/core/util";
-import { Card, Em, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Card, Heading, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbMailOpened } from "react-icons/tb";
-import { useLocation } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-const OpenMessage = () => {
-  const [messageId, encryptionKey] = useLocation().hash.slice(1).split("/");
+const OpenMessagePage = () => {
+  let { messageId = "" } = useParams();
   const [message, setMessage] = useState<MessageInfoResult | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (messageId) {
-      const fetchMessage = async () => {
-        const message = await messageService.getMessageInfo(messageId);
-        setMessage(message);
-      };
+    const fetchMessage = async () => {
+      const message = await messageService.getMessageInfo(messageId);
+      setMessage(message);
+    };
 
-      fetchMessage();
-    }
+    fetchMessage();
   }, [messageId]);
 
-  if (!messageId) {
-    return (
-      <Alert maxW="700px" w="full" status="error" title="Message Id Not Found">
-        The URL is not specifying a valid <strong>MESSAGE_ID</strong>. Please
-        ensure it follows this format:
-        <br />
-        {"/open#{MESSAGE_ID}/{DECODE_KEY}"}
-      </Alert>
-    );
-  }
+  const handleOpenMessage = () => {
+    const currentPath = location.pathname;
+    const currentHash = location.hash;
+
+    navigate(`${currentPath}/open${currentHash}`);
+  };
 
   if (!message) {
     return <Spinner size="lg" />;
@@ -56,8 +51,10 @@ const OpenMessage = () => {
   }
 
   return (
-    <Card.Root size="lg">
-      <Card.Header>Message History</Card.Header>
+    <Card.Root>
+      <Card.Header>
+        <Heading> Message History</Heading>
+      </Card.Header>
       <Card.Body>
         <TimelineRoot maxW="400px">
           <TimelineItem>
@@ -110,20 +107,15 @@ const OpenMessage = () => {
           )}
         </TimelineRoot>
       </Card.Body>
-      <Card.Footer justifyContent="center">
+      <Card.Footer justifyContent={"flex-end"}>
         {message.opened ? (
           <Button variant="surface">Close</Button>
         ) : (
-          <VStack>
-            <Button>Open Message </Button>
-            <Text textStyle="sm">
-              <Em>This message can be opened only once!</Em>
-            </Text>
-          </VStack>
+          <Button onClick={handleOpenMessage}>Open Message </Button>
         )}
       </Card.Footer>
     </Card.Root>
   );
 };
 
-export default OpenMessage;
+export default OpenMessagePage;
