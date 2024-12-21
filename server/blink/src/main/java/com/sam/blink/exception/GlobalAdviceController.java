@@ -19,10 +19,10 @@ public class GlobalAdviceController {
     }
 
     @ExceptionHandler(MessageAlreadyOpened.class)
-    @ResponseStatus(HttpStatus.GONE)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleMessageAlreadyOpened(MessageAlreadyOpened e) {
         return new ExceptionResponse(
-                HttpStatus.GONE.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 "Message already opened!",
                 LocalDateTime.now());
     }
