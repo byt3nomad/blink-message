@@ -10,22 +10,24 @@ import {
 } from "@/components/ui/timeline";
 import messageService, { MessageInfoResult } from "@/core/messageService";
 import { formatDate } from "@/core/util";
-import { Card, Heading, Spinner, Text } from "@chakra-ui/react";
+import { Card, Heading, Show, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
-import { TbMailOpened } from "react-icons/tb";
+import { TbMailOpened, TbRefresh } from "react-icons/tb";
+import { useNavigate } from "react-router";
 
 interface ShowMessageInfoProps {
   messageId: string;
-  handelOpenMessageClick(): void;
+  handelOpenMessage(): void;
 }
 
 const ShowMessageInfo = ({
   messageId,
-  handelOpenMessageClick,
+  handelOpenMessage,
 }: ShowMessageInfoProps) => {
   const [message, setMessage] = useState<MessageInfoResult | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -35,6 +37,10 @@ const ShowMessageInfo = ({
 
     fetchMessage();
   }, [messageId]);
+
+  const handleCreateNewMessage = () => {
+    navigate("/");
+  };
 
   if (!message) {
     return <Spinner size="lg" />;
@@ -66,47 +72,48 @@ const ShowMessageInfo = ({
             </TimelineContent>
           </TimelineItem>
 
-          {message.opened && (
-            <>
-              <TimelineItem>
-                <TimelineConnector>
-                  <TbMailOpened />
-                </TimelineConnector>
-                <TimelineContent>
-                  <TimelineTitle textStyle="sm">Message Opened</TimelineTitle>
-                  <TimelineDescription>
-                    {formatDate(message.openedAt || 0)}
-                  </TimelineDescription>
-                  <Text textStyle="sm">
-                    The recipient has viewed the message content.
-                  </Text>
-                </TimelineContent>
-              </TimelineItem>
+          <Show when={message.opened}>
+            <TimelineItem>
+              <TimelineConnector>
+                <TbMailOpened />
+              </TimelineConnector>
+              <TimelineContent>
+                <TimelineTitle textStyle="sm">Message Opened</TimelineTitle>
+                <TimelineDescription>
+                  {formatDate(message.openedAt || 0)}
+                </TimelineDescription>
+                <Text textStyle="sm">
+                  The recipient has viewed the message content.
+                </Text>
+              </TimelineContent>
+            </TimelineItem>
 
-              <TimelineItem>
-                <TimelineConnector>
-                  <MdDeleteOutline />
-                </TimelineConnector>
-                <TimelineContent>
-                  <TimelineTitle textStyle="sm">Message Deleted</TimelineTitle>
-                  <TimelineDescription>
-                    {formatDate(message.openedAt || 0)}
-                  </TimelineDescription>
-                  <Text textStyle="sm">
-                    The content of the message have been permanently erased.
-                  </Text>
-                </TimelineContent>
-              </TimelineItem>
-            </>
-          )}
+            <TimelineItem>
+              <TimelineConnector>
+                <MdDeleteOutline />
+              </TimelineConnector>
+              <TimelineContent>
+                <TimelineTitle textStyle="sm">Message Deleted</TimelineTitle>
+                <TimelineDescription>
+                  {formatDate(message.openedAt || 0)}
+                </TimelineDescription>
+                <Text textStyle="sm">
+                  The content of the message have been permanently erased.
+                </Text>
+              </TimelineContent>
+            </TimelineItem>
+          </Show>
         </TimelineRoot>
       </Card.Body>
       <Card.Footer justifyContent={"flex-end"}>
-        {message.opened ? (
-          <Button variant="surface">Close</Button>
-        ) : (
-          <Button onClick={handelOpenMessageClick}>Open Message </Button>
-        )}
+        <Show
+          when={message.opened}
+          fallback={<Button onClick={handelOpenMessage}>Open Message </Button>}
+        >
+          <Button variant={"outline"} onClick={handleCreateNewMessage}>
+            <TbRefresh /> Create new message
+          </Button>
+        </Show>
       </Card.Footer>
     </Card.Root>
   );

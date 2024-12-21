@@ -9,6 +9,7 @@ import { useLocation } from "react-router";
 
 interface OpenMessageProps {
   messageId: string;
+  handleCloseOpenedMessage(): void;
 }
 
 type DecryptedMessageSuccess = {
@@ -21,7 +22,10 @@ type DecryptedMessageFailure = {
 };
 type DecryptedMessageResult = DecryptedMessageSuccess | DecryptedMessageFailure;
 
-const OpenMessage = ({ messageId }: OpenMessageProps) => {
+const OpenMessage = ({
+  messageId,
+  handleCloseOpenedMessage,
+}: OpenMessageProps) => {
   const [message, setMessage] = useState<DecryptedMessageResult | null>(null);
   const encryptionKey = useLocation().hash.slice(1);
 
@@ -75,7 +79,9 @@ const OpenMessage = ({ messageId }: OpenMessageProps) => {
         ></Textarea>
       </Card.Body>
       <Card.Footer justifyContent={"flex-end"}>
-        <Button variant={"ghost"}>Close</Button>
+        <Button variant={"ghost"} onClick={handleCloseOpenedMessage}>
+          Close
+        </Button>
         <ClipboardRoot value={message.message} timeout={1000}>
           <ClipboardButton />
         </ClipboardRoot>
