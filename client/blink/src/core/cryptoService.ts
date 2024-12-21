@@ -40,29 +40,58 @@ export type EncryptedMessageResult = {
   iv: string;
 };
 
-export const encryptMessage = async (
-  content: string
-): Promise<EncryptedMessageResult> => {
-  const encodedMessage = encoder.encode(content);
-  const key = await window.crypto.subtle.generateKey(
-    {
-      name: "AES-GCM",
-      length: 256,
-    },
-    true,
-    ["encrypt", "decrypt"]
-  );
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
-
-  const encryptedMessage = await window.crypto.subtle.encrypt(
-    { name: "AES-GCM", iv: iv },
-    key,
-    encodedMessage
-  );
-
-  return {
-    encryptedMessage: encodeBase64(encryptedMessage),
-    iv: encodeBase64(iv),
-    key: (await window.crypto.subtle.exportKey("jwk", key)).k || "",
-  };
+type DecryptSuccess = {
+  success: true;
+  message: string;
 };
+
+type DecryptFailure = {
+  success: false;
+};
+export type DecryptMessageResult = DecryptSuccess | DecryptFailure;
+
+const cryptoService = {
+  encryptMessage: async (content: string): Promise<EncryptedMessageResult> => {
+    const encodedMessage = encoder.encode(content);
+    const key = await window.crypto.subtle.generateKey(
+      {
+        name: "AES-GCM",
+        length: 256,
+      },
+      true,
+      ["encrypt", "decrypt"]
+    );
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+    const encryptedMessage = await window.crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: iv },
+      key,
+      encodedMessage
+    );
+
+    return {
+      encryptedMessage: encodeBase64(encryptedMessage),
+      iv: encodeBase64(iv),
+      key: (await window.crypto.subtle.exportKey("jwk", key)).k || "",
+    };
+  },
+  decryptMessage: async (
+    message: string,
+    iv: string,
+    key: string
+  ): Promise<DecryptMessageResult> => {
+    try {
+      const bufferedText = await window.crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: decodeBase64(iv) },
+        await importKey(key),
+        decodeBase64(message)
+      );
+
+      return { success: true, message: decoder.decode(bufferedText) };
+    } catch (error) {
+      return { success: false };
+    }
+  },
+};
+
+export default cryptoService;

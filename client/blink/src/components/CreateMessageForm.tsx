@@ -1,7 +1,7 @@
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
-import { encryptMessage } from "@/core/cryptoService";
+import cryptoService from "@/core/cryptoService";
 import messageService from "@/core/messageService";
 import { Card, Heading, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
@@ -24,7 +24,9 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
     e.preventDefault();
     setError(null);
 
-    const { encryptedMessage, key, iv } = await encryptMessage(message);
+    const { encryptedMessage, key, iv } = await cryptoService.encryptMessage(
+      message
+    );
     const response = await messageService.createMessage(encryptedMessage, iv);
 
     if (response.success) {

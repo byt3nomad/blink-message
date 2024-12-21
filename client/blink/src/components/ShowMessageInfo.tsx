@@ -16,11 +16,15 @@ import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbMailOpened } from "react-icons/tb";
 
-interface MessageInfoProps {
+interface ShowMessageInfoProps {
   messageId: string;
+  handelOpenMessageClick(): void;
 }
 
-const MessageInfo = ({ messageId }: MessageInfoProps) => {
+const ShowMessageInfo = ({
+  messageId,
+  handelOpenMessageClick,
+}: ShowMessageInfoProps) => {
   const [message, setMessage] = useState<MessageInfoResult | null>(null);
 
   useEffect(() => {
@@ -32,18 +36,12 @@ const MessageInfo = ({ messageId }: MessageInfoProps) => {
     fetchMessage();
   }, [messageId]);
 
-  const handleOpenMessage = () => {};
-
   if (!message) {
     return <Spinner size="lg" />;
   }
 
   if (message?.success === false) {
-    return (
-      <Alert maxW="700px" w="full" status="error" title="Message not found!">
-        {message.error}
-      </Alert>
-    );
+    return <Alert maxW="700px" w="full" status="error" title={message.error} />;
   }
 
   return (
@@ -107,11 +105,11 @@ const MessageInfo = ({ messageId }: MessageInfoProps) => {
         {message.opened ? (
           <Button variant="surface">Close</Button>
         ) : (
-          <Button onClick={handleOpenMessage}>Open Message </Button>
+          <Button onClick={handelOpenMessageClick}>Open Message </Button>
         )}
       </Card.Footer>
     </Card.Root>
   );
 };
 
-export default MessageInfo;
+export default ShowMessageInfo;

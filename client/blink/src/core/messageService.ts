@@ -27,6 +27,13 @@ type MessageInfoSuccess = {
 
 export type MessageInfoResult = MessageInfoSuccess | ErrorResult;
 
+type MessageOpenSuccess = {
+  success: true;
+  encryptedMessage: string;
+  iv: string;
+};
+
+type MessageOpenResult = MessageOpenSuccess | ErrorResult;
 const messageService = {
   createMessage: async (
     encryptedMessage: string,
@@ -65,6 +72,32 @@ const messageService = {
       return {
         success: false,
         error: getErrorMessage(e),
+      };
+    }
+  },
+  getMessageContent: async (messageId: string): Promise<MessageOpenResult> => {
+    try {
+      const response = await client.post(`messages/${messageId}/open`);
+
+      return {
+        success: true,
+        encryptedMessage: response.data.encryptedMessage,
+        iv: response.data.iv,
+      };
+    } catch (e: any) {
+      const defaultError = getErrorMessage(e);
+      let error = defaultError;
+      if (e.response?.data?.code) {
+        let errorMessages: Record<number, string> = {
+          400: "Message already opened!",
+          404: `Message with id ${messageId} was not found!`,
+        };
+
+        error = errorMessages[e.response.data.code];
+      }
+      return {
+        success: false,
+        error,
       };
     }
   },
