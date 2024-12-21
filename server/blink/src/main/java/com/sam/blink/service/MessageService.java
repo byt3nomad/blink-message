@@ -40,7 +40,6 @@ public class MessageService {
                 .orElseThrow(MessageNotFound::new);
 
         var messageResponseBuilder = MessageInfoResponse.builder()
-                .id(message.getId())
                 .opened(message.isOpened())
                 .createdAt(message.getCreatedAt().toEpochMilli());
         if(message.isOpened()) {
