@@ -9,11 +9,11 @@ interface MessageUrlProps {
   createNewMessageClicked: () => void;
 }
 
-const CopyMessageUrl: React.FC<MessageUrlProps> = ({
+const CopyMessageUrl = ({
   encryptionKey,
   messageId,
   createNewMessageClicked: createNewMessage,
-}) => {
+}: MessageUrlProps) => {
   const origin = window.location.origin;
   const openMessageUrl = `${origin}/${messageId}#${encryptionKey}`;
   const handleCreateNewMessageButton = () => {

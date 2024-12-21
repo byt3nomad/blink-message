@@ -14,7 +14,7 @@ export type CreatedMessage = {
 interface MessageFormProps {
   onSuccess: (createdMessage: CreatedMessage) => void;
 }
-const CreateMessageForm: React.FC<MessageFormProps> = ({ onSuccess }) => {
+const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
