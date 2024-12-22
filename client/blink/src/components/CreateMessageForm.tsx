@@ -6,6 +6,8 @@ import messageService from "@/core/messageService";
 import { Card, Heading, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 
+const MAX_CHAR_LIMIT = 5000;
+
 export type CreatedMessage = {
   id: string;
   key: string;
@@ -46,10 +48,15 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
             <Heading size="md">Message</Heading>
           </Card.Header>
           <Card.Body>
-            <Field required>
+            <Field
+              required
+              helperText={`${message.length}/${MAX_CHAR_LIMIT} used characters.`}
+            >
               <Textarea
                 size={"lg"}
                 resize="none"
+                autoresize
+                maxLength={MAX_CHAR_LIMIT}
                 value={message}
                 placeholder="Start typing..."
                 onChange={(e) => setMessage(e.target.value)}

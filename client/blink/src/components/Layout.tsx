@@ -6,7 +6,7 @@ const Layout = () => {
   return (
     <>
       <Header />
-      <VStack px={4} pt={10}>
+      <VStack px={4} py={10}>
         <Outlet />
       </VStack>
     </>

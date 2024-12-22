@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Alert } from "./ui/alert";
 import cryptoService from "@/core/cryptoService";
 import { useLocation } from "react-router";
+import { Field } from "./ui/field";
 
 interface OpenMessageProps {
   messageId: string;
@@ -72,11 +73,14 @@ const OpenMessage = ({
         <Heading>Message Content</Heading>
       </Card.Header>
       <Card.Body>
-        <Textarea
-          readOnly={true}
-          variant={"subtle"}
-          value={message.message}
-        ></Textarea>
+        <Field helperText={`${message.message.length} characters.`}>
+          <Textarea
+            autoresize
+            readOnly={true}
+            variant={"subtle"}
+            value={message.message}
+          ></Textarea>
+        </Field>
       </Card.Body>
       <Card.Footer justifyContent={"flex-end"}>
         <Button variant={"ghost"} onClick={handleCloseOpenedMessage}>

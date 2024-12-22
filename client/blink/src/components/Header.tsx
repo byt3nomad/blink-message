@@ -1,10 +1,9 @@
-import { Box, Flex, HStack, IconButton, Stack, VStack } from "@chakra-ui/react";
-import { Button } from "./ui/button";
+import { Box, HStack, IconButton } from "@chakra-ui/react";
+import { FaGithub } from "react-icons/fa";
 import { TbMessageChatbot } from "react-icons/tb";
+import { Link, useNavigate } from "react-router";
 import { ColorModeButton } from "./ui/color-mode";
 import { Tooltip } from "./ui/tooltip";
-import { Link, useNavigate } from "react-router";
-import { FaGithub } from "react-icons/fa";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -15,7 +14,12 @@ const Header = () => {
   return (
     <Box>
       <HStack justifyContent={"center"}>
-        <HStack justifyContent={"space-between"} maxW={"700px"} w={"full"}>
+        <HStack
+          justifyContent={"space-between"}
+          maxW={"700px"}
+          w={"full"}
+          mx={4}
+        >
           <Tooltip content="Back to homepage">
             <IconButton onClick={handleHomeButtonClick} variant={"plain"}>
               <TbMessageChatbot />
