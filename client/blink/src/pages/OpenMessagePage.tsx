@@ -6,19 +6,18 @@ import { useParams } from "react-router";
 
 const OpenMessagePage = () => {
   let { messageId = "" } = useParams();
-  const [openMessage, setOpenMessage] = useState(false);
-  const handleOpenMessage = () => {
-    setOpenMessage(true);
-  };
+  const [messageOpened, setMessageOpened] = useState(false);
 
+  const handleOpenMessage = () => {
+    setMessageOpened(true);
+  };
   const handleCloseOpenedMessage = () => {
-    setOpenMessage(false);
-    console.log("asd");
+    setMessageOpened(false);
   };
 
   return (
     <Show
-      when={openMessage}
+      when={messageOpened}
       fallback={
         <ShowMessageInfo
           messageId={messageId}

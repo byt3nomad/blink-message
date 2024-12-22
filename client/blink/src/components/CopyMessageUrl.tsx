@@ -4,6 +4,7 @@ import {
   Card,
   ClipboardRoot,
   Heading,
+  HStack,
   Image,
   Show,
   Text,
@@ -13,6 +14,8 @@ import urlInfoDark from "../assets/url-dark.svg";
 import urlInfoWhite from "../assets/url-white.svg";
 import { ClipboardButton } from "./ui/clipboard";
 import { useColorMode } from "./ui/color-mode";
+import { LuExternalLink } from "react-icons/lu";
+import { Link } from "react-router";
 
 interface MessageUrlProps {
   messageId: string;
@@ -54,7 +57,12 @@ const CopyMessageUrl = ({
               {openMessageUrl}
             </Text>
           </Card.Body>
-          <Card.Footer justifyContent="center">
+          <Card.Footer justifyContent="flex-end">
+            <Link to={openMessageUrl}>
+              <HStack>
+                Visit Link <LuExternalLink />
+              </HStack>
+            </Link>
             <ClipboardRoot value={openMessageUrl} timeout={1000}>
               <ClipboardButton />
             </ClipboardRoot>
