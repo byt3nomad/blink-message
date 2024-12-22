@@ -4,13 +4,15 @@ import {
   Card,
   ClipboardRoot,
   Heading,
-  Highlight,
   Image,
+  Show,
   Text,
 } from "@chakra-ui/react";
 import { TbRefresh } from "react-icons/tb";
+import urlInfoDark from "../assets/url-dark.svg";
+import urlInfoWhite from "../assets/url-white.svg";
 import { ClipboardButton } from "./ui/clipboard";
-import urlInfo from "../assets/url-dark.svg";
+import { useColorMode } from "./ui/color-mode";
 
 interface MessageUrlProps {
   messageId: string;
@@ -28,6 +30,8 @@ const CopyMessageUrl = ({
   const handleCreateNewMessageButton = () => {
     createNewMessage();
   };
+
+  const { colorMode } = useColorMode();
 
   return (
     <>
@@ -56,7 +60,12 @@ const CopyMessageUrl = ({
             </ClipboardRoot>
           </Card.Footer>
         </Card.Root>
-        <Image mt={"7"} src={urlInfo} />
+        <Show
+          when={colorMode === "dark"}
+          fallback={<Image mt={"7"} src={urlInfoWhite} />}
+        >
+          <Image mt={"7"} src={urlInfoDark} />
+        </Show>
         <Text>
           This application encrypts/decrypts your message on the client side
           using an encryption key that is only available in the URL.The key is
