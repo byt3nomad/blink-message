@@ -5,6 +5,7 @@ import com.sam.blink.model.dto.MessageCreateResponse;
 import com.sam.blink.model.dto.MessageInfoResponse;
 import com.sam.blink.model.dto.MessageOpenResponse;
 import com.sam.blink.service.MessageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ public class MessageController {
     private final MessageService messageService;
 
     @PostMapping("/api/v1/messages")
-    public MessageCreateResponse create(@RequestBody MessageCreateRequest messageRequest) {
+    public MessageCreateResponse create(@RequestBody @Valid MessageCreateRequest messageRequest) {
         return messageService.create(messageRequest);
     }
 
