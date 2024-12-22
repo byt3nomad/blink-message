@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbMailOpened, TbRefresh } from "react-icons/tb";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 interface ShowMessageInfoProps {
   messageId: string;
@@ -27,7 +27,6 @@ const ShowMessageInfo = ({
   handelOpenMessage,
 }: ShowMessageInfoProps) => {
   const [message, setMessage] = useState<MessageInfoResult | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -37,10 +36,6 @@ const ShowMessageInfo = ({
 
     fetchMessage();
   }, [messageId]);
-
-  const handleCreateNewMessage = () => {
-    navigate("/");
-  };
 
   if (!message) {
     return <Spinner size="lg" />;
@@ -110,9 +105,11 @@ const ShowMessageInfo = ({
           when={message.opened}
           fallback={<Button onClick={handelOpenMessage}>Open Message </Button>}
         >
-          <Button variant={"outline"} onClick={handleCreateNewMessage}>
-            <TbRefresh /> Create new message
-          </Button>
+          <NavLink to={"/"}>
+            <Button variant={"outline"}>
+              <TbRefresh /> Create new message
+            </Button>
+          </NavLink>
         </Show>
       </Card.Footer>
     </Card.Root>
