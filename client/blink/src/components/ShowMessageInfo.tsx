@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbMailOpened, TbRefresh } from "react-icons/tb";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink } from "react-router";
 
 interface ShowMessageInfoProps {
   messageId: string;

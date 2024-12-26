@@ -23,7 +23,7 @@ const encodeBase64 = (buffer: ArrayBuffer | Uint8Array): string => {
   return btoa(text);
 };
 
-const decodeBase64 = (text: string): Uint8Array<ArrayBuffer> => {
+const decodeBase64 = (text: string): Uint8Array => {
   const decodedText = atob(text);
   const byteArray = new Uint8Array(decodedText.length);
 
