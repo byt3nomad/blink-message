@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bm-postgres
+  namespace: bm
+spec:
+  selector:
+    matchLabels:
+      app: bm-postgres-label
+  serviceName: "bm-postgres"
+  template:
+    metadata:
+      namespace: bm
+      labels:
+        app: bm-postgres-label
+    spec:
+      containers:
+        - name: bm-postgres
+          image: postgres:17.2-alpine
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bm-secrets
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: bm-postgres
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        namespace: bm
+        name: bm-postgres
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "local-path"
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: bm
+  name: bm-postgres
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: bm-postgres-label
