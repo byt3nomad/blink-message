@@ -6,13 +6,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: bm-postgres-label
+      app: bm
+      component: database
   serviceName: "bm-postgres"
   template:
     metadata:
       namespace: bm
       labels:
-        app: bm-postgres-label
+        app: bm
+        component: database
     spec:
       containers:
         - name: bm-postgres
@@ -49,4 +51,5 @@ spec:
     - port: 5432
       targetPort: 5432
   selector:
-    app: bm-postgres-label
+    app: bm
+    component: database
