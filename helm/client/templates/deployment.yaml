@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.label.app }}
+    component: {{ .Values.label.component }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.label.app }}
+      component: {{ .Values.label.component }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.label.app }}
+        component: {{ .Values.label.component }}
+    spec:
+      containers:
+      - name: spring
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.app.port }}

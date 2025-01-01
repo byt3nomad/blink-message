@@ -1,0 +1,13 @@
+namespace: blink-message
+
+app:
+  name: client
+  port: 4173
+
+label:
+  app: blink-message
+  component: client
+
+image:
+  name: danchoivlado/blink-client
+  tag: latest
