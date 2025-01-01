@@ -1,3 +1,5 @@
+name: blink-message
+
 services:
   client:
     image: danchoivlado/blink-client
@@ -9,13 +11,13 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_URL=jdbc:postgresql://db:5432/postgres
+      - DB_URL=jdbc:postgresql://database:5432/postgres
+      - DB_PASSWORD=password
 
-  db:
+  database:
     image: postgres
     environment:
-      POSTGRES_USER: asd
-      POSTGRES_PASSWORD: asd
+      POSTGRES_PASSWORD: password
     volumes:
       - db_data:/var/lib/postgresql/data
 
