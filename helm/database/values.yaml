@@ -1,9 +1,9 @@
-appName: bm-database
+appName: blink-message-database
 
-namespace: bm
+namespace: blink-message
 
 label:
-  app: bm
+  app: blink-message
   component: database
 
 image:
