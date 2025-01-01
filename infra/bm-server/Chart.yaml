@@ -1,0 +1,7 @@
+apiVersion: v2
+name: bm-server
+description: A Helm chart for blink message server
+
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

@@ -1,0 +1,13 @@
+appName: bm-database
+
+namespace: bm
+
+label:
+  app: bm
+  component: database
+
+image:
+  name: postgres
+  tag: 17.2-alpine
+
+storage: 1Gi

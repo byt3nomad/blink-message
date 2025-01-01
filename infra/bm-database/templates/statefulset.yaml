@@ -3,6 +3,9 @@ kind: StatefulSet
 metadata:
   name: {{ .Values.appName }}
   namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.label.app }}
+    component: {{ .Values.label.component }}
 spec:
   selector:
     matchLabels:
@@ -18,7 +21,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.appName }}
-          image: postgres:17.2-alpine
+          image: "{{ .Values.image.name }}{{ .Values.image.tag }}"
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -39,4 +42,4 @@ spec:
         storageClassName: "local-path"
         resources:
           requests:
-            storage: 1Gi
+            storage: {{ .Values.storage }}

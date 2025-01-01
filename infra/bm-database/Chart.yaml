@@ -1,0 +1,7 @@
+apiVersion: v2
+name: bm-postgres
+description: A Helm chart for postgres
+
+type: application
+version: 1.0.0
+appVersion: "17.2"

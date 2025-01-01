@@ -1,0 +1,12 @@
+appName: bm-server
+
+namespace: bm
+
+label:
+  app: bm
+  component: server
+
+image:
+  name: danchoivlado/blink-server
+  tag: latest
+
