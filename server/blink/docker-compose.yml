@@ -1,9 +1,10 @@
+name: blink-message-database
+
 services:
-  db:
+  database:
     image: postgres
     environment:
-      POSTGRES_USER: asd
-      POSTGRES_PASSWORD: asd
+      POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
     volumes:
