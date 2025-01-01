@@ -20,13 +20,13 @@ spec:
         component: {{ .Values.label.component }}
     spec:
       containers:
-        - name: {{ .Values.appName }}
+        - name: postgres
           image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: blink-message-secrets
+                  name: secrets
                   key: POSTGRES_PASSWORD
           ports:
             - containerPort: 5432

@@ -1,12 +1,11 @@
-appName: bm-server
+appName: server
 
-namespace: bm
+namespace: blink-message
 
 label:
-  app: bm
+  app: blink-message
   component: server
 
 image:
   name: danchoivlado/blink-server
   tag: latest
-
