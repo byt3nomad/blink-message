@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.appName }}
+  name: {{ .Values.app.name }}
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Values.label.app }}
@@ -11,7 +11,7 @@ spec:
     matchLabels:
       app: {{ .Values.label.app }}
       component: {{ .Values.label.component }}
-  serviceName: {{ .Values.appName }}
+  serviceName: {{ .Values.app.name }}
   template:
     metadata:
       namespace: {{ .Values.namespace }}
@@ -29,14 +29,14 @@ spec:
                   name: secrets
                   key: POSTGRES_PASSWORD
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.app.port }}
           volumeMounts:
-            - name: {{ .Values.appName }}
+            - name: {{ .Values.app.name }}
               mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
     - metadata:
         namespace: {{ .Values.namespace }}
-        name: {{ .Values.appName }}
+        name: {{ .Values.app.name }}
       spec:
         accessModes: ["ReadWriteOnce"]
         storageClassName: "local-path"

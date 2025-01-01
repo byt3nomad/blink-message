@@ -1,6 +1,8 @@
-appName: database
-
 namespace: blink-message
+
+app:
+  name: database
+  port: 5432
 
 label:
   app: blink-message

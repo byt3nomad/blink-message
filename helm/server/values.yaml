@@ -1,6 +1,8 @@
-appName: server
-
 namespace: blink-message
+
+app:
+  name: server
+  port: 8080
 
 label:
   app: blink-message
