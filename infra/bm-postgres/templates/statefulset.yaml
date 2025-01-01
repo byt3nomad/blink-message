@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: bm-postgres
-  namespace: bm
+  name: {{ .Values.appName }}
+  namespace: {{ .Values.namespace }}
 spec:
   selector:
     matchLabels:
-      app: bm
-      component: database
-  serviceName: "bm-postgres"
+      app: {{ .Values.label.app }}
+      component: {{ .Values.label.component }}
+  serviceName: {{ .Values.appName }}
   template:
     metadata:
-      namespace: bm
+      namespace: {{ .Values.namespace }}
       labels:
-        app: bm
-        component: database
+        app: {{ .Values.label.app }}
+        component: {{ .Values.label.component }}
     spec:
       containers:
-        - name: bm-postgres
+        - name: {{ .Values.appName }}
           image: postgres:17.2-alpine
           env:
             - name: POSTGRES_PASSWORD
@@ -28,28 +28,15 @@ spec:
           ports:
             - containerPort: 5432
           volumeMounts:
-            - name: bm-postgres
+            - name: {{ .Values.appName }}
               mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
     - metadata:
-        namespace: bm
-        name: bm-postgres
+        namespace: {{ .Values.namespace }}
+        name: {{ .Values.appName }}
       spec:
         accessModes: ["ReadWriteOnce"]
         storageClassName: "local-path"
         resources:
           requests:
             storage: 1Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: bm
-  name: bm-postgres
-spec:
-  ports:
-    - port: 5432
-      targetPort: 5432
-  selector:
-    app: bm
-    component: database

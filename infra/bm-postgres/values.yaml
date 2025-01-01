@@ -1,0 +1,7 @@
+appName: bm-postgres
+
+namespace: bm
+
+label:
+  app: bm
+  component: database
