@@ -6,6 +6,8 @@ metadata:
   labels:
     app: {{ .Values.label.app }}
     component: {{ .Values.label.component }}
+  annotations:
+    deployment.kubernetes.io/restartedAt: "{{ now | date }}"
 spec:
   selector:
     matchLabels:
