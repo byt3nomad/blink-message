@@ -2,7 +2,7 @@
 
 # Set variables
 IMAGE_NAME="blink-client"
-TAG=1.5
+TAG=1.6
 REGISTRY="danchoivlado"
 
 # Build the image with the specified tag
