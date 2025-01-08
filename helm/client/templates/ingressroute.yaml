@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - kind: Rule
+    match: Host(`blink-message.com`)
+    services:
+    - name: {{ .Values.app.name }}
+      port: 80
+  tls:
+    certResolver: letsencrypt

@@ -11,3 +11,4 @@ label:
 image:
   name: danchoivlado/blink-client
   tag: latest
+  pullPolicy: Always
