@@ -1,0 +1,1 @@
+This application encrypts/decrypts your message on the client side using an encryption key that is only available in the URL.The key is not sent to the server, so even if the server is compromised, no one can read your message without the key from the URL. Once the message is read, its content is permanently deleted.
