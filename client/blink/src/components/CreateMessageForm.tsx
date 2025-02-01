@@ -4,6 +4,7 @@ import { Field } from "@/components/ui/field";
 import cryptoService from "@/core/cryptoService";
 import messageService from "@/core/messageService";
 import {
+  Box,
   Card,
   Code,
   Heading,
@@ -54,56 +55,51 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
     setMessage("");
   };
   return (
-    <>
+    <VStack maxW={"750px"} w={"full"} gap={24}>
       <VStack gap={1}>
         <Heading textAlign={"center"} fontFamily={"Montserrat"}>
           Exchange confidential data while ensuring total privacy
         </Heading>
         <Code>client side encryption with AES 256</Code>
       </VStack>
-      <Card.Root maxW="700px" w="full" size="sm">
-        <form onSubmit={handleSubmit}>
-          <Card.Header>
-            <Heading size="md">Message</Heading>
-          </Card.Header>
-          <Card.Body>
-            <Field
-              required
-              helperText={`${message.length}/${MAX_CHAR_LIMIT} used characters.`}
-            >
-              <Textarea
-                size={"lg"}
-                resize="none"
-                autoresize
-                maxLength={MAX_CHAR_LIMIT}
-                value={message}
-                placeholder="Start typing..."
-                onChange={(e) => setMessage(e.target.value)}
-              />
-            </Field>
-          </Card.Body>
-          <Card.Footer justifyContent="flex-end">
-            <Button loading={submitting} type="submit">
-              Create link
-            </Button>
-          </Card.Footer>
-        </form>
-      </Card.Root>
-      {error && (
-        <Alert
-          maxW="700px"
-          w="full"
-          status="error"
-          title={`There was an error processing your request: ${error}`}
-        />
-      )}
-      <VStack
-        maxW="700px"
-        w="full"
-        paddingTop="20"
-        gap="2"
-        alignItems="flex-start"
-      >
+      <Box w={"full"}>
+        <Card.Root size="sm">
+          <form onSubmit={handleSubmit}>
+            <Card.Header>
+              <Heading size="md">Message</Heading>
+            </Card.Header>
+            <Card.Body>
+              <Field
+                required
+                helperText={`${message.length}/${MAX_CHAR_LIMIT} used characters.`}
+              >
+                <Textarea
+                  size={"lg"}
+                  resize="none"
+                  autoresize
+                  maxLength={MAX_CHAR_LIMIT}
+                  value={message}
+                  placeholder="Start typing..."
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </Field>
+            </Card.Body>
+            <Card.Footer justifyContent="flex-end">
+              <Button loading={submitting} type="submit">
+                Create link
+              </Button>
+            </Card.Footer>
+          </form>
+        </Card.Root>
+        {error && (
+          <Alert
+            mt={3}
+            status="error"
+            title={`There was an error processing your request: ${error}`}
+          />
+        )}
+      </Box>
+      <VStack gap="2" alignItems="flex-start">
         <Heading as="h2">Message Encryption</Heading>
         <Show
           when={colorMode === "dark"}
@@ -121,7 +117,7 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
           message.
         </Text>
       </VStack>
-    </>
+    </VStack>
   );
 };
 

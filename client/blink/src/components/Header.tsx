@@ -9,7 +9,7 @@ const Header = () => {
       <HStack justifyContent={"center"}>
         <HStack
           justifyContent={"space-between"}
-          maxW={"700px"}
+          maxW={"750px"}
           w={"full"}
           mx={4}
         >

@@ -27,7 +27,7 @@ function CreateMessagePage() {
   };
 
   return (
-    <VStack px={4} py={10} gap={12}>
+    <VStack px={4} py={10}>
       {!createdMessage ? (
         <CreateMessageForm onSuccess={handleOnSuccess} />
       ) : (
