@@ -1,16 +1,9 @@
-import { Box, HStack, IconButton } from "@chakra-ui/react";
+import { Box, HStack, IconButton, Text } from "@chakra-ui/react";
 import { FaGithub } from "react-icons/fa";
-import { TbMessageChatbot } from "react-icons/tb";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { ColorModeButton } from "./ui/color-mode";
-import { Tooltip } from "./ui/tooltip";
 
 const Header = () => {
-  const navigate = useNavigate();
-  const handleHomeButtonClick = () => {
-    navigate("/", { state: { reset: true } });
-  };
-
   return (
     <Box>
       <HStack justifyContent={"center"}>
@@ -20,11 +13,9 @@ const Header = () => {
           w={"full"}
           mx={4}
         >
-          <Tooltip content="Back to homepage">
-            <IconButton onClick={handleHomeButtonClick} variant={"plain"}>
-              <TbMessageChatbot />
-            </IconButton>
-          </Tooltip>
+          <Link to={"/"}>
+            <Text fontFamily={"Audiowide"}>Blink Message</Text>
+          </Link>
           <HStack>
             <Link
               to={"https://github.com/byt3nomad/blink-message"}
