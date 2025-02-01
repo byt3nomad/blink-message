@@ -3,8 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import cryptoService from "@/core/cryptoService";
 import messageService from "@/core/messageService";
-import { Card, Code, Heading, Textarea, VStack } from "@chakra-ui/react";
+import {
+  Card,
+  Code,
+  Heading,
+  Image,
+  Show,
+  Text,
+  Textarea,
+  VStack,
+} from "@chakra-ui/react";
 import { useState } from "react";
+import urlInfoDark from "../assets/url-dark.svg";
+import urlInfoWhite from "../assets/url-white.svg";
+import { useColorMode } from "./ui/color-mode";
 
 const MAX_CHAR_LIMIT = 5000;
 
@@ -20,6 +32,7 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const { colorMode } = useColorMode();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setSubmitting(true);
@@ -46,7 +59,7 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
         <Heading textAlign={"center"} fontFamily={"Montserrat"}>
           Exchange confidential data while ensuring total privacy
         </Heading>
-        <Code>client side encrypted with AES 256</Code>
+        <Code>client side encryption with AES 256</Code>
       </VStack>
       <Card.Root maxW="700px" w="full" size="sm">
         <form onSubmit={handleSubmit}>
@@ -84,6 +97,30 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
           title={`There was an error processing your request: ${error}`}
         />
       )}
+      <VStack
+        maxW="700px"
+        w="full"
+        paddingTop="20"
+        gap="2"
+        alignItems="flex-start"
+      >
+        <Heading as="h2">Message Encryption</Heading>
+        <Show
+          when={colorMode === "dark"}
+          fallback={<Image src={urlInfoWhite} />}
+        >
+          <Image src={urlInfoDark} />
+        </Show>
+        <Text as="p">
+          To protect your messages, we first use the native crypto.subtle API in
+          your browser to generate a secure AES-256 key, which is then used to
+          encrypt your message entirely on your device before anything is sent
+          to our server. Only the encrypted message is transmitted, while the
+          actual key is stored in the URL, ensuring the server itself has no
+          access to your decryption key and cannot read the content of your
+          message.
+        </Text>
+      </VStack>
     </>
   );
 };
