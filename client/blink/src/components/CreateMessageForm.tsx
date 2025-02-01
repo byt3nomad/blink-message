@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import cryptoService from "@/core/cryptoService";
 import messageService from "@/core/messageService";
-import { Card, Heading, Textarea } from "@chakra-ui/react";
+import { Card, Code, Heading, Textarea, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
 const MAX_CHAR_LIMIT = 5000;
@@ -42,6 +42,12 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
   };
   return (
     <>
+      <VStack gap={1}>
+        <Heading textAlign={"center"} fontFamily={"Montserrat"}>
+          Exchange confidential data while ensuring total privacy
+        </Heading>
+        <Code>client side encrypted with AES 256</Code>
+      </VStack>
       <Card.Root maxW="700px" w="full" size="sm">
         <form onSubmit={handleSubmit}>
           <Card.Header>

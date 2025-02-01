@@ -68,29 +68,33 @@ const OpenMessage = ({
   }
 
   return (
-    <Card.Root maxW="700px" w="full" size="sm">
-      <Card.Header>
-        <Heading>Message Content</Heading>
-      </Card.Header>
-      <Card.Body>
-        <Field helperText={`${message.message.length} characters.`}>
-          <Textarea
-            autoresize
-            readOnly={true}
-            variant={"subtle"}
-            value={message.message}
-          ></Textarea>
-        </Field>
-      </Card.Body>
-      <Card.Footer justifyContent={"flex-end"}>
-        <Button variant={"ghost"} onClick={handleCloseOpenedMessage}>
-          Close
-        </Button>
-        <ClipboardRoot value={message.message} timeout={1000}>
-          <ClipboardButton />
-        </ClipboardRoot>
-      </Card.Footer>
-    </Card.Root>
+    <>
+      <Heading textAlign={"center"}>Message Opened </Heading>
+
+      <Card.Root maxW="700px" w="full" size="sm">
+        <Card.Header>
+          <Heading>Message Content</Heading>
+        </Card.Header>
+        <Card.Body>
+          <Field helperText={`${message.message.length} characters.`}>
+            <Textarea
+              autoresize
+              readOnly={true}
+              variant={"subtle"}
+              value={message.message}
+            ></Textarea>
+          </Field>
+        </Card.Body>
+        <Card.Footer justifyContent={"flex-end"}>
+          <Button variant={"ghost"} onClick={handleCloseOpenedMessage}>
+            Close
+          </Button>
+          <ClipboardRoot value={message.message} timeout={1000}>
+            <ClipboardButton />
+          </ClipboardRoot>
+        </Card.Footer>
+      </Card.Root>
+    </>
   );
 };
 

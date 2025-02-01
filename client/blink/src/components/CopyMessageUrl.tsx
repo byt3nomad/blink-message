@@ -34,10 +34,9 @@ const CopyMessageUrl = ({
     createNewMessage();
   };
 
-  const { colorMode } = useColorMode();
-
   return (
     <>
+      <Heading textAlign={"center"}>Message Created </Heading>
       <Box maxW="700px" w="full">
         <Box mb={1}>
           <Button
@@ -68,19 +67,6 @@ const CopyMessageUrl = ({
             </ClipboardRoot>
           </Card.Footer>
         </Card.Root>
-        <Show
-          when={colorMode === "dark"}
-          fallback={<Image mt={"7"} src={urlInfoWhite} />}
-        >
-          <Image mt={"7"} src={urlInfoDark} />
-        </Show>
-        <Text>
-          This application encrypts/decrypts your message on the client side
-          using an encryption key that is only available in the URL.The key is
-          not sent to the server, so even if the server is compromised, no one
-          can read your message without the key from the URL. Once the message
-          is read, its content is permanently deleted.
-        </Text>
       </Box>
     </>
   );

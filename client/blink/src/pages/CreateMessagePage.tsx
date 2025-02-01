@@ -4,6 +4,7 @@ import CreateMessageForm, {
   CreatedMessage,
 } from "../components/CreateMessageForm";
 import { useLocation } from "react-router";
+import { VStack } from "@chakra-ui/react";
 
 function CreateMessagePage() {
   const [createdMessage, setCreatedMessage] = useState<CreatedMessage | null>(
@@ -26,7 +27,7 @@ function CreateMessagePage() {
   };
 
   return (
-    <>
+    <VStack px={4} py={10} gap={12}>
       {!createdMessage ? (
         <CreateMessageForm onSuccess={handleOnSuccess} />
       ) : (
@@ -36,7 +37,7 @@ function CreateMessagePage() {
           messageId={createdMessage.id}
         />
       )}
-    </>
+    </VStack>
   );
 }
 

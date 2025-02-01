@@ -1,11 +1,11 @@
-import { Box, HStack, IconButton, Text } from "@chakra-ui/react";
+import { HStack, IconButton, Text } from "@chakra-ui/react";
 import { FaGithub } from "react-icons/fa";
 import { Link } from "react-router";
 import { ColorModeButton } from "./ui/color-mode";
 
 const Header = () => {
   return (
-    <Box>
+    <header>
       <HStack justifyContent={"center"}>
         <HStack
           justifyContent={"space-between"}
@@ -29,7 +29,7 @@ const Header = () => {
           </HStack>
         </HStack>
       </HStack>
-    </Box>
+    </header>
   );
 };
 
