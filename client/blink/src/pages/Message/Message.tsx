@@ -1,10 +1,10 @@
-import OpenMessage from "@/components/OpenMessage";
-import ShowMessageInfo from "@/components/ShowMessageInfo";
+import OpenMessage from "@/pages/Message/OpenMessage";
+import MessageInfo from "@/pages/Message/MessageInfo";
 import { Show, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { useParams } from "react-router";
 
-const OpenMessagePage = () => {
+const Message = () => {
   let { messageId = "" } = useParams();
   const [messageOpened, setMessageOpened] = useState(false);
 
@@ -20,7 +20,7 @@ const OpenMessagePage = () => {
       <Show
         when={messageOpened}
         fallback={
-          <ShowMessageInfo
+          <MessageInfo
             messageId={messageId}
             handelOpenMessage={handleOpenMessage}
           />
@@ -35,4 +35,4 @@ const OpenMessagePage = () => {
   );
 };
 
-export default OpenMessagePage;
+export default Message;

@@ -17,15 +17,12 @@ import { MdDeleteOutline } from "react-icons/md";
 import { TbMailOpened, TbRefresh } from "react-icons/tb";
 import { NavLink } from "react-router";
 
-interface ShowMessageInfoProps {
+interface MessageInfoProps {
   messageId: string;
   handelOpenMessage(): void;
 }
 
-const ShowMessageInfo = ({
-  messageId,
-  handelOpenMessage,
-}: ShowMessageInfoProps) => {
+const MessageInfo = ({ messageId, handelOpenMessage }: MessageInfoProps) => {
   const [message, setMessage] = useState<MessageInfoResult | null>(null);
 
   useEffect(() => {
@@ -116,4 +113,4 @@ const ShowMessageInfo = ({
   );
 };
 
-export default ShowMessageInfo;
+export default MessageInfo;

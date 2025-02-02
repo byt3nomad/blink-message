@@ -1,27 +1,18 @@
 import { Card, Heading, Spinner, Textarea } from "@chakra-ui/react";
-import { Button } from "./ui/button";
-import { ClipboardButton, ClipboardRoot } from "./ui/clipboard";
+import { Button } from "../../components/ui/button";
+import { ClipboardButton, ClipboardRoot } from "../../components/ui/clipboard";
 import messageService from "@/core/messageService";
 import { useEffect, useState } from "react";
-import { Alert } from "./ui/alert";
+import { Alert } from "../../components/ui/alert";
 import cryptoService from "@/core/cryptoService";
 import { useLocation } from "react-router";
-import { Field } from "./ui/field";
+import { Field } from "../../components/ui/field";
+import { DecryptedMessageResult } from "./types";
 
 interface OpenMessageProps {
   messageId: string;
   handleCloseOpenedMessage(): void;
 }
-
-type DecryptedMessageSuccess = {
-  success: true;
-  message: string;
-};
-type DecryptedMessageFailure = {
-  success: false;
-  error: string;
-};
-type DecryptedMessageResult = DecryptedMessageSuccess | DecryptedMessageFailure;
 
 const OpenMessage = ({
   messageId,
@@ -70,7 +61,6 @@ const OpenMessage = ({
   return (
     <>
       <Heading textAlign={"center"}>Message Opened </Heading>
-
       <Card.Root maxW="700px" w="full" size="sm">
         <Card.Header>
           <Heading>Message Content</Heading>
