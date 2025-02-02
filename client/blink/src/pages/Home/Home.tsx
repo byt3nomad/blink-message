@@ -1,10 +1,8 @@
-import CopyMessageUrl from "@/components/CopyMessageUrl";
-import { useEffect, useState } from "react";
-import CreateMessageForm, {
-  CreatedMessage,
-} from "../components/CreateMessageForm";
-import { useLocation } from "react-router";
 import { VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
+import CopyMessage from "./CopyMessage";
+import CreateMessage, { CreatedMessage } from "./CreateMessage";
 
 function CreateMessagePage() {
   const [createdMessage, setCreatedMessage] = useState<CreatedMessage | null>(
@@ -29,9 +27,9 @@ function CreateMessagePage() {
   return (
     <VStack px={4} py={10}>
       {!createdMessage ? (
-        <CreateMessageForm onSuccess={handleOnSuccess} />
+        <CreateMessage onSuccess={handleOnSuccess} />
       ) : (
-        <CopyMessageUrl
+        <CopyMessage
           createNewMessageClicked={handleCreateNewMessageClicked}
           encryptionKey={createdMessage.key}
           messageId={createdMessage.id}

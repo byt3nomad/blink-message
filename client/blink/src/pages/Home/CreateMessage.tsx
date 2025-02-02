@@ -15,9 +15,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import urlInfoDark from "../assets/url-dark.svg";
-import urlInfoWhite from "../assets/url-white.svg";
-import { useColorMode } from "./ui/color-mode";
+import urlInfoDark from "../../assets/url-dark.svg";
+import urlInfoWhite from "../../assets/url-white.svg";
+import { useColorMode } from "../../components/ui/color-mode";
 
 const MAX_CHAR_LIMIT = 5000;
 
@@ -26,10 +26,10 @@ export type CreatedMessage = {
   key: string;
 };
 
-interface MessageFormProps {
+interface CreateFormProps {
   onSuccess: (createdMessage: CreatedMessage) => void;
 }
-const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
+const CreateForm = ({ onSuccess }: CreateFormProps) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -121,4 +121,4 @@ const CreateMessageForm = ({ onSuccess }: MessageFormProps) => {
   );
 };
 
-export default CreateMessageForm;
+export default CreateForm;

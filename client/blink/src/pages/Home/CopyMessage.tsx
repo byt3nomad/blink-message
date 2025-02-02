@@ -1,33 +1,28 @@
 import { Button } from "@/components/ui/button";
+import { ClipboardButton } from "@/components/ui/clipboard";
 import {
   Box,
   Card,
   ClipboardRoot,
   Heading,
   HStack,
-  Image,
-  Show,
   Text,
 } from "@chakra-ui/react";
-import { TbRefresh } from "react-icons/tb";
-import urlInfoDark from "../assets/url-dark.svg";
-import urlInfoWhite from "../assets/url-white.svg";
-import { ClipboardButton } from "./ui/clipboard";
-import { useColorMode } from "./ui/color-mode";
 import { LuExternalLink } from "react-icons/lu";
+import { TbRefresh } from "react-icons/tb";
 import { Link } from "react-router";
 
-interface MessageUrlProps {
+interface CopyMessageProps {
   messageId: string;
   encryptionKey: string;
   createNewMessageClicked: () => void;
 }
 
-const CopyMessageUrl = ({
+const CopyMessage = ({
   encryptionKey,
   messageId,
   createNewMessageClicked: createNewMessage,
-}: MessageUrlProps) => {
+}: CopyMessageProps) => {
   const origin = window.location.origin;
   const openMessageUrl = `${origin}/${messageId}#${encryptionKey}`;
   const handleCreateNewMessageButton = () => {
@@ -72,4 +67,4 @@ const CopyMessageUrl = ({
   );
 };
 
-export default CopyMessageUrl;
+export default CopyMessage;
