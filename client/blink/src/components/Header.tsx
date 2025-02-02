@@ -13,7 +13,7 @@ const Header = () => {
           w={"full"}
           mx={4}
         >
-          <Link to={"/"}>
+          <Link to={"/"} state={{ reset: true }}>
             <Text fontFamily={"Audiowide"}>Blink Message</Text>
           </Link>
           <HStack>
