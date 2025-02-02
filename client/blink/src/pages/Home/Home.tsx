@@ -2,7 +2,8 @@ import { VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import CopyMessage from "./CopyMessage";
-import CreateMessage, { CreatedMessage } from "./CreateMessage";
+import CreateMessage from "./CreateMessage";
+import { CreatedMessage } from "./types";
 
 function CreateMessagePage() {
   const [createdMessage, setCreatedMessage] = useState<CreatedMessage | null>(
