@@ -1,93 +1,121 @@
+import { DecryptedMessageResult } from "./types";
+import { EncryptMessageResult } from "./types";
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
+const IV_LENGTH = 12;
 
-const importKey = async (jsonKey: string) => {
-  return await window.crypto.subtle.importKey(
-    "jwk",
+const encodeBase64 = (bytes: Uint8Array) => {
+  const binaryString = Array.from(bytes, (byte) =>
+    String.fromCodePoint(byte)
+  ).join("");
+
+  return btoa(binaryString);
+};
+
+const decodeBase64 = (text: string) => {
+  const decodedText = atob(text);
+  return Uint8Array.from(decodedText, (char) => char.charCodeAt(0));
+};
+
+const generateIv = () => {
+  return window.crypto.getRandomValues(new Uint8Array(IV_LENGTH));
+};
+
+const extractIv = (decryptionKey: string) => {
+  const decryptionKeyBytes = decodeBase64(decryptionKey);
+
+  return decryptionKeyBytes.slice(0, IV_LENGTH);
+};
+
+const generateCryptoKey = async () => {
+  return window.crypto.subtle.generateKey(
     {
-      alg: "A256GCM",
-      ext: true,
-      k: jsonKey,
-      key_ops: ["encrypt", "decrypt"],
-      kty: "oct",
+      name: "AES-GCM",
+      length: 256,
     },
+    true,
+    ["encrypt", "decrypt"]
+  );
+};
+
+const extractCryptoKey = async (decryptionKey: string) => {
+  const decryptionKeyBytes = decodeBase64(decryptionKey);
+  const cryptoKeyBytes = decryptionKeyBytes.slice(IV_LENGTH);
+
+  return window.crypto.subtle.importKey(
+    "raw",
+    cryptoKeyBytes,
     "AES-GCM",
     true,
     ["encrypt", "decrypt"]
   );
 };
 
-const encodeBase64 = (buffer: ArrayBuffer | Uint8Array): string => {
-  let view = buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : buffer;
-  const text = String.fromCharCode(...view);
-  return btoa(text);
+const encryptMessage = async (
+  message: string,
+  key: CryptoKey,
+  iv: Uint8Array
+) => {
+  const encodedMessage = encoder.encode(message);
+
+  const encryptedMessage = await window.crypto.subtle.encrypt(
+    { name: "AES-GCM", iv: iv },
+    key,
+    encodedMessage
+  );
+
+  return encodeBase64(new Uint8Array(encryptedMessage));
 };
 
-const decodeBase64 = (text: string): Uint8Array => {
-  const decodedText = atob(text);
-  const byteArray = new Uint8Array(decodedText.length);
+const decryptMessage = async (
+  encryptedMessage: string,
+  key: CryptoKey,
+  iv: Uint8Array
+) => {
+  const encryptedMessageBytes = decodeBase64(encryptedMessage);
 
-  for (let i = 0; i < decodedText.length; i++) {
-    byteArray[i] = decodedText.charCodeAt(i);
-  }
+  const decryptedMessageBytes = await window.crypto.subtle.decrypt(
+    { name: "AES-GCM", iv },
+    key,
+    encryptedMessageBytes
+  );
 
-  return byteArray;
+  return decoder.decode(decryptedMessageBytes);
 };
 
-export type EncryptedMessageResult = {
-  key: string;
-  encryptedMessage: string;
-  iv: string;
-};
+const generateDecryptionKey = async (key: CryptoKey, iv: Uint8Array) => {
+  const exportedKey = await window.crypto.subtle.exportKey("raw", key);
+  const keyBytes = new Uint8Array(exportedKey);
 
-type DecryptSuccess = {
-  success: true;
-  message: string;
+  const unifiedBytes = new Uint8Array([...iv, ...keyBytes]);
+  return encodeBase64(unifiedBytes);
 };
-
-type DecryptFailure = {
-  success: false;
-};
-export type DecryptMessageResult = DecryptSuccess | DecryptFailure;
 
 const cryptoService = {
-  encryptMessage: async (content: string): Promise<EncryptedMessageResult> => {
-    const encodedMessage = encoder.encode(content);
-    const key = await window.crypto.subtle.generateKey(
-      {
-        name: "AES-GCM",
-        length: 256,
-      },
-      true,
-      ["encrypt", "decrypt"]
-    );
-    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  encryptMessage: async (message: string): Promise<EncryptMessageResult> => {
+    const cryptoKey = await generateCryptoKey();
+    const iv = generateIv();
 
-    const encryptedMessage = await window.crypto.subtle.encrypt(
-      { name: "AES-GCM", iv: iv },
-      key,
-      encodedMessage
-    );
+    const encryptedMessage = await encryptMessage(message, cryptoKey, iv);
+    const decryptionKey = await generateDecryptionKey(cryptoKey, iv);
 
-    return {
-      encryptedMessage: encodeBase64(encryptedMessage),
-      iv: encodeBase64(iv),
-      key: (await window.crypto.subtle.exportKey("jwk", key)).k || "",
-    };
+    return { encryptedMessage, decryptionKey };
   },
   decryptMessage: async (
-    message: string,
-    iv: string,
-    key: string
-  ): Promise<DecryptMessageResult> => {
+    encryptedMessage: string,
+    decryptionKey: string
+  ): Promise<DecryptedMessageResult> => {
     try {
-      const bufferedText = await window.crypto.subtle.decrypt(
-        { name: "AES-GCM", iv: decodeBase64(iv) },
-        await importKey(key),
-        decodeBase64(message)
+      const iv = extractIv(decryptionKey);
+      const cryptoKey = await extractCryptoKey(decryptionKey);
+
+      const decryptedMessage = await decryptMessage(
+        encryptedMessage,
+        cryptoKey,
+        iv
       );
 
-      return { success: true, message: decoder.decode(bufferedText) };
+      return { success: true, decryptedMessage };
     } catch (error) {
       return { success: false };
     }

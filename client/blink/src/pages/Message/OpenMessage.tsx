@@ -4,10 +4,10 @@ import { ClipboardButton, ClipboardRoot } from "../../components/ui/clipboard";
 import messageService from "@/core/messageService";
 import { useEffect, useState } from "react";
 import { Alert } from "../../components/ui/alert";
-import cryptoService from "@/core/cryptoService";
 import { useLocation } from "react-router";
 import { Field } from "../../components/ui/field";
 import { DecryptedMessageResult } from "./types";
+import cryptoService from "@/core/cryptoService";
 
 interface OpenMessageProps {
   messageId: string;
@@ -19,7 +19,7 @@ const OpenMessage = ({
   handleCloseOpenedMessage,
 }: OpenMessageProps) => {
   const [message, setMessage] = useState<DecryptedMessageResult | null>(null);
-  const encryptionKey = useLocation().hash.slice(1);
+  const decryptionKey = useLocation().hash.slice(1);
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -28,14 +28,16 @@ const OpenMessage = ({
       );
 
       if (fetchedMessageResult.success) {
-        const decryptMessageResult = await cryptoService.decryptMessage(
+        const decryptedMessageResult = await cryptoService.decryptMessage(
           fetchedMessageResult.encryptedMessage,
-          fetchedMessageResult.iv,
-          encryptionKey
+          decryptionKey
         );
 
-        if (decryptMessageResult.success) {
-          setMessage({ success: true, message: decryptMessageResult.message });
+        if (decryptedMessageResult.success) {
+          setMessage({
+            success: true,
+            message: decryptedMessageResult.decryptedMessage,
+          });
         } else {
           setMessage({
             success: false,

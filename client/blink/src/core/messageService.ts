@@ -30,17 +30,15 @@ export type MessageInfoResult = MessageInfoSuccess | ErrorResult;
 type MessageOpenSuccess = {
   success: true;
   encryptedMessage: string;
-  iv: string;
 };
 
 type MessageOpenResult = MessageOpenSuccess | ErrorResult;
 const messageService = {
   createMessage: async (
-    encryptedMessage: string,
-    iv: string
+    encryptedMessage: string
   ): Promise<MessageCreateResult> => {
     try {
-      const response = await client.post("messages", { encryptedMessage, iv });
+      const response = await client.post("messages", { encryptedMessage });
       if (response.data && response.data.id) {
         return { success: true, messageId: response.data.id };
       }
@@ -82,7 +80,6 @@ const messageService = {
       return {
         success: true,
         encryptedMessage: response.data.encryptedMessage,
-        iv: response.data.iv,
       };
     } catch (e: any) {
       const defaultError = getErrorMessage(e);

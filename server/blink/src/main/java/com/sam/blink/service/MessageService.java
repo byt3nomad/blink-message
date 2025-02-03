@@ -24,7 +24,6 @@ public class MessageService {
         var message = Message.builder()
                 .id(NanoIdUtils.randomNanoId())
                 .encryptedMessage(request.encryptedMessage())
-                .iv(request.iv())
                 .createdAt(Instant.now())
                 .opened(false)
                 .build();
@@ -61,18 +60,15 @@ public class MessageService {
             throw new MessageAlreadyOpened();
         }
 
-        //If one of the data is missing it can't be decrypted.
         var encryptedMessage = message.getEncryptedMessage().orElseThrow(InvalidMessageData::new);
-        var iv = message.getIv().orElseThrow(InvalidMessageData::new);
 
         //Open the message
         message.setOpened(true);
-        message.setIv(null);
         message.setEncryptedMessage(null);
         message.setOpenedAt(Instant.now());
 
         messageRepository.save(message);
 
-        return new MessageOpenResponse(encryptedMessage, iv);
+        return new MessageOpenResponse(encryptedMessage);
     }
 }

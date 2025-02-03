@@ -1,11 +1,11 @@
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
-import cryptoService from "@/core/cryptoService";
 import messageService from "@/core/messageService";
 import { Box, Card, Heading, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import { CreatedMessage } from "./types";
+import cryptoService from "@/core/cryptoService";
 
 const MAX_CHAR_LIMIT = 5000;
 
@@ -23,13 +23,12 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
     e.preventDefault();
     setError(null);
 
-    const { encryptedMessage, key, iv } = await cryptoService.encryptMessage(
-      message
-    );
-    const response = await messageService.createMessage(encryptedMessage, iv);
+    const { encryptedMessage, decryptionKey } =
+      await cryptoService.encryptMessage(message);
+    const response = await messageService.createMessage(encryptedMessage);
 
     if (response.success) {
-      onSuccess({ id: response.messageId, key });
+      onSuccess({ id: response.messageId, decryptionKey });
     } else {
       setError(response.error);
     }

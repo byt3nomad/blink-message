@@ -22,10 +22,6 @@ public class Message {
     @Column(name = "encrypted_message")
     private String encryptedMessage;
 
-    @Setter
-    @Column
-    private String iv;
-
     @Getter
     @Setter
     @Column(name = "is_opened")
@@ -42,10 +38,6 @@ public class Message {
 
     public Optional<String> getEncryptedMessage() {
         return Optional.ofNullable(encryptedMessage);
-    }
-
-    public Optional<String> getIv() {
-        return Optional.ofNullable(iv);
     }
 
     public Optional<Instant> getOpenedAt() {

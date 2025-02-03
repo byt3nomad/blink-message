@@ -32,7 +32,7 @@ function CreateMessagePage() {
       ) : (
         <CopyMessage
           createNewMessageClicked={handleCreateNewMessageClicked}
-          encryptionKey={createdMessage.key}
+          encryptionKey={createdMessage.decryptionKey}
           messageId={createdMessage.id}
         />
       )}
