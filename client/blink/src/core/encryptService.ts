@@ -1,39 +1,25 @@
 import cryptoService from "./cryptoService";
+import encodingService from "./encodingService";
 import { DecryptedMessageResult } from "./types";
 import { EncryptMessageResult } from "./types";
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
 const IV_LENGTH = 12;
 const SALT_LENGTH = 12;
 
-const encodeBase64 = (bytes: Uint8Array) => {
-  const binaryString = Array.from(bytes, (byte) =>
-    String.fromCodePoint(byte)
-  ).join("");
-
-  return btoa(binaryString);
-};
-
-const decodeBase64 = (text: string) => {
-  const decodedText = atob(text);
-  return Uint8Array.from(decodedText, (char) => char.charCodeAt(0));
-};
-
 const extractIv = (decryptionKey: string) => {
-  const decryptionKeyBytes = decodeBase64(decryptionKey);
+  const decryptionKeyBytes = encodingService.decodeBase64(decryptionKey);
 
   return decryptionKeyBytes.slice(0, IV_LENGTH);
 };
 
 const deriveKeyFromPassword = async (password: string, salt: Uint8Array) => {
-  const encodedPassword = encoder.encode(password);
+  const encodedPassword = encodingService.encodeUtf8(password);
   const baseKey = await cryptoService.importPbkdf2Key(encodedPassword);
 
   return cryptoService.deriveKey(salt, baseKey);
 };
 
 const extractCryptoKey = async (decryptionKey: string) => {
-  const decryptionKeyBytes = decodeBase64(decryptionKey);
+  const decryptionKeyBytes = encodingService.decodeBase64(decryptionKey);
   const cryptoKeyBytes = decryptionKeyBytes.slice(IV_LENGTH);
 
   return cryptoService.importAesKey(cryptoKeyBytes);
@@ -44,13 +30,13 @@ const encryptMessage = async (
   cryptoKey: CryptoKey,
   iv: Uint8Array
 ) => {
-  const encodedMessage = encoder.encode(message);
+  const encodedMessage = encodingService.encodeUtf8(message);
   const encryptedMessage = await cryptoService.encrypt(
     encodedMessage,
     iv,
     cryptoKey
   );
-  return encodeBase64(new Uint8Array(encryptedMessage));
+  return encodingService.encodeBase64(new Uint8Array(encryptedMessage));
 };
 
 const encryptKeyWithPassword = async (
@@ -70,7 +56,7 @@ const decryptMessage = async (
   key: CryptoKey,
   iv: Uint8Array
 ) => {
-  const encryptedMessageBytes = decodeBase64(encryptedMessage);
+  const encryptedMessageBytes = encodingService.decodeBase64(encryptedMessage);
 
   const decryptedMessageBytes = await cryptoService.decrypt(
     iv,
@@ -78,7 +64,7 @@ const decryptMessage = async (
     encryptedMessageBytes
   );
 
-  return decoder.decode(decryptedMessageBytes);
+  return encodingService.decodeUtf8(decryptedMessageBytes);
 };
 
 const encodeDecryptionKey = async (key: CryptoKey, iv: Uint8Array) => {
@@ -86,7 +72,7 @@ const encodeDecryptionKey = async (key: CryptoKey, iv: Uint8Array) => {
   const keyBytes = new Uint8Array(exportedKey);
 
   const unifiedBytes = new Uint8Array([...iv, ...keyBytes]);
-  return encodeBase64(unifiedBytes);
+  return encodingService.encodeBase64(unifiedBytes);
 };
 
 const encodeDecryptionKeyComponents = async (
@@ -97,7 +83,7 @@ const encodeDecryptionKeyComponents = async (
   const keyBytes = new Uint8Array(encryptedKeyWithPassword);
 
   const unifiedBytes = new Uint8Array([...iv, ...salt, ...keyBytes]);
-  return encodeBase64(unifiedBytes);
+  return encodingService.encodeBase64(unifiedBytes);
 };
 
 const encryptService = {
