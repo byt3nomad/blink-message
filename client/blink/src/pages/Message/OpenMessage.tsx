@@ -7,7 +7,7 @@ import { Alert } from "../../components/ui/alert";
 import { useLocation } from "react-router";
 import { Field } from "../../components/ui/field";
 import { DecryptedMessageResult } from "./types";
-import cryptoService from "@/core/cryptoService";
+import encryptService from "@/core/encryptService";
 
 interface OpenMessageProps {
   messageId: string;
@@ -28,7 +28,7 @@ const OpenMessage = ({
       );
 
       if (fetchedMessageResult.success) {
-        const decryptedMessageResult = await cryptoService.decryptMessage(
+        const decryptedMessageResult = await encryptService.decryptMessage(
           fetchedMessageResult.encryptedMessage,
           decryptionKey
         );

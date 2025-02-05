@@ -148,7 +148,7 @@ const encodeDecryptionKeyComponents = async (
   return encodeBase64(unifiedBytes);
 };
 
-const cryptoService = {
+const encryptService = {
   encryptMessage: async (message: string): Promise<EncryptMessageResult> => {
     const key = await generateKey();
     const iv = generateIv();
@@ -204,4 +204,4 @@ const cryptoService = {
   },
 };
 
-export default cryptoService;
+export default encryptService;

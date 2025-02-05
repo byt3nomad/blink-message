@@ -5,7 +5,7 @@ import messageService from "@/core/messageService";
 import { Box, Card, Heading, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import { CreatedMessage } from "./types";
-import cryptoService from "@/core/cryptoService";
+import encryptService from "@/core/encryptService";
 
 const MAX_CHAR_LIMIT = 5000;
 
@@ -24,7 +24,7 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
     setError(null);
 
     const { encryptedMessage, decryptionKey } =
-      await cryptoService.encryptMessage(message);
+      await encryptService.encryptMessage(message);
     const response = await messageService.createMessage(encryptedMessage);
 
     if (response.success) {
