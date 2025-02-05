@@ -1,3 +1,4 @@
+import cryptoService from "./cryptoService";
 import { DecryptedMessageResult } from "./types";
 import { EncryptMessageResult } from "./types";
 const encoder = new TextEncoder();
@@ -32,63 +33,18 @@ const extractIv = (decryptionKey: string) => {
   return decryptionKeyBytes.slice(0, IV_LENGTH);
 };
 
-const exportKey = async (key: CryptoKey) => {
-  return window.crypto.subtle.exportKey("raw", key);
-};
-
-const generateKey = async () => {
-  return window.crypto.subtle.generateKey(
-    {
-      name: "AES-GCM",
-      length: 256,
-    },
-    true,
-    ["encrypt", "decrypt"]
-  );
-};
-
 const deriveKeyFromPassword = async (password: string, salt: Uint8Array) => {
-  const keyMaterial = await window.crypto.subtle.importKey(
-    "raw",
-    encoder.encode(password),
-    "PBKDF2",
-    false,
-    ["deriveBits", "deriveKey"]
-  );
+  const encodedPassword = encoder.encode(password);
+  const baseKey = await cryptoService.importPbkdf2Key(encodedPassword);
 
-  return window.crypto.subtle.deriveKey(
-    {
-      name: "PBKDF2",
-      salt,
-      iterations: 100000,
-      hash: "SHA-256",
-    },
-    keyMaterial,
-    { name: "AES-GCM", length: 256 },
-    true,
-    ["encrypt", "decrypt"]
-  );
+  return cryptoService.deriveKey(salt, baseKey);
 };
 
 const extractCryptoKey = async (decryptionKey: string) => {
   const decryptionKeyBytes = decodeBase64(decryptionKey);
   const cryptoKeyBytes = decryptionKeyBytes.slice(IV_LENGTH);
 
-  return window.crypto.subtle.importKey(
-    "raw",
-    cryptoKeyBytes,
-    "AES-GCM",
-    true,
-    ["encrypt", "decrypt"]
-  );
-};
-
-const encrypt = (data: ArrayBuffer, iv: Uint8Array, cryptoKey: CryptoKey) => {
-  return window.crypto.subtle.encrypt(
-    { name: "AES-GCM", iv: iv },
-    cryptoKey,
-    data
-  );
+  return cryptoService.importAesKey(cryptoKeyBytes);
 };
 
 const encryptMessage = async (
@@ -97,7 +53,11 @@ const encryptMessage = async (
   iv: Uint8Array
 ) => {
   const encodedMessage = encoder.encode(message);
-  const encryptedMessage = await encrypt(encodedMessage, iv, cryptoKey);
+  const encryptedMessage = await cryptoService.encrypt(
+    encodedMessage,
+    iv,
+    cryptoKey
+  );
   return encodeBase64(new Uint8Array(encryptedMessage));
 };
 
@@ -107,10 +67,10 @@ const encryptKeyWithPassword = async (
   iv: Uint8Array,
   salt: Uint8Array
 ) => {
-  const exportedKeyToEncrypt = await exportKey(keyToEncrypt);
+  const exportedKeyToEncrypt = await cryptoService.exportKey(keyToEncrypt);
   const keyFromPassword = await deriveKeyFromPassword(password, salt);
 
-  return encrypt(exportedKeyToEncrypt, iv, keyFromPassword);
+  return cryptoService.encrypt(exportedKeyToEncrypt, iv, keyFromPassword);
 };
 
 const decryptMessage = async (
@@ -120,8 +80,8 @@ const decryptMessage = async (
 ) => {
   const encryptedMessageBytes = decodeBase64(encryptedMessage);
 
-  const decryptedMessageBytes = await window.crypto.subtle.decrypt(
-    { name: "AES-GCM", iv },
+  const decryptedMessageBytes = await cryptoService.decrypt(
+    iv,
     key,
     encryptedMessageBytes
   );
@@ -130,7 +90,7 @@ const decryptMessage = async (
 };
 
 const encodeDecryptionKey = async (key: CryptoKey, iv: Uint8Array) => {
-  const exportedKey = await exportKey(key);
+  const exportedKey = await cryptoService.exportKey(key);
   const keyBytes = new Uint8Array(exportedKey);
 
   const unifiedBytes = new Uint8Array([...iv, ...keyBytes]);
@@ -150,7 +110,7 @@ const encodeDecryptionKeyComponents = async (
 
 const encryptService = {
   encryptMessage: async (message: string): Promise<EncryptMessageResult> => {
-    const key = await generateKey();
+    const key = await cryptoService.generateKey();
     const iv = generateIv();
 
     const encryptedMessage = await encryptMessage(message, key, iv);
@@ -162,7 +122,7 @@ const encryptService = {
     message: string,
     password: string
   ): Promise<EncryptMessageResult> => {
-    const key = await generateKey();
+    const key = await cryptoService.generateKey();
     const iv = generateIv();
     const salt = generateSalt();
 
