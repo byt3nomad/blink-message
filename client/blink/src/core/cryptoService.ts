@@ -49,6 +49,9 @@ const cryptoService = {
   decrypt: (iv: Uint8Array, key: CryptoKey, data: Uint8Array) => {
     return window.crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data);
   },
+  generateRandomBytes: (length: number) => {
+    return window.crypto.getRandomValues(new Uint8Array(length));
+  },
 };
 
 export default cryptoService;

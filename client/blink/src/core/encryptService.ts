@@ -19,14 +19,6 @@ const decodeBase64 = (text: string) => {
   return Uint8Array.from(decodedText, (char) => char.charCodeAt(0));
 };
 
-const generateIv = () => {
-  return window.crypto.getRandomValues(new Uint8Array(IV_LENGTH));
-};
-
-const generateSalt = () => {
-  return window.crypto.getRandomValues(new Uint8Array(SALT_LENGTH));
-};
-
 const extractIv = (decryptionKey: string) => {
   const decryptionKeyBytes = decodeBase64(decryptionKey);
 
@@ -111,7 +103,7 @@ const encodeDecryptionKeyComponents = async (
 const encryptService = {
   encryptMessage: async (message: string): Promise<EncryptMessageResult> => {
     const key = await cryptoService.generateKey();
-    const iv = generateIv();
+    const iv = cryptoService.generateRandomBytes(IV_LENGTH);
 
     const encryptedMessage = await encryptMessage(message, key, iv);
     const decryptionKey = await encodeDecryptionKey(key, iv);
@@ -123,8 +115,8 @@ const encryptService = {
     password: string
   ): Promise<EncryptMessageResult> => {
     const key = await cryptoService.generateKey();
-    const iv = generateIv();
-    const salt = generateSalt();
+    const iv = cryptoService.generateRandomBytes(IV_LENGTH);
+    const salt = cryptoService.generateRandomBytes(SALT_LENGTH);
 
     // encrypt the message with the key
     const encryptedMessage = await encryptMessage(message, key, iv);
