@@ -67,7 +67,7 @@ const decryptMessage = async (
   return encodingService.decodeUtf8(decryptedMessageBytes);
 };
 
-const encodeDecryptionKey = async (key: CryptoKey, iv: Uint8Array) => {
+const createDecryptionKey = async (key: CryptoKey, iv: Uint8Array) => {
   const exportedKey = await cryptoService.exportKey(key);
   const keyBytes = new Uint8Array(exportedKey);
 
@@ -75,7 +75,7 @@ const encodeDecryptionKey = async (key: CryptoKey, iv: Uint8Array) => {
   return encodingService.encodeBase64(unifiedBytes);
 };
 
-const encodeDecryptionKeyComponents = async (
+const createDecryptionKeyComponents = async (
   iv: Uint8Array,
   salt: Uint8Array,
   encryptedKeyWithPassword: ArrayBuffer
@@ -92,7 +92,7 @@ const encryptService = {
     const iv = cryptoService.generateRandomBytes(IV_LENGTH);
 
     const encryptedMessage = await encryptMessage(message, key, iv);
-    const decryptionKey = await encodeDecryptionKey(key, iv);
+    const decryptionKey = await createDecryptionKey(key, iv);
 
     return { encryptedMessage, decryptionKey };
   },
@@ -113,7 +113,7 @@ const encryptService = {
       iv,
       salt
     );
-    const decryptionKey = await encodeDecryptionKeyComponents(
+    const decryptionKey = await createDecryptionKeyComponents(
       iv,
       salt,
       encryptedKeyWithPassword
