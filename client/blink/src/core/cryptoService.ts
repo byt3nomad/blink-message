@@ -17,7 +17,7 @@ const cryptoService = {
     );
   },
 
-  importAesKey: (key: Uint8Array) => {
+  importAesKey: (key: ArrayBuffer) => {
     return window.crypto.subtle.importKey("raw", key, "AES-GCM", true, [
       "encrypt",
       "decrypt",
