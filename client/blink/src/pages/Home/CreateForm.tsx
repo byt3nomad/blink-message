@@ -23,7 +23,7 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
     e.preventDefault();
     setError(null);
 
-    const { encryptedMessage, decryptionKey } =
+    const { encryptedMessage, decryptionData: decryptionKey } =
       await encryptService.encryptMessage(message);
     const response = await messageService.createMessage(encryptedMessage);
 

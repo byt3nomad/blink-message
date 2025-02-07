@@ -1,6 +1,6 @@
 export type EncryptMessageResult = {
   encryptedMessage: string;
-  decryptionKey: string;
+  decryptionData: string;
 };
 
 export type DecryptedMessageResult =
