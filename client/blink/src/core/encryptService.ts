@@ -1,7 +1,12 @@
 import cryptoService from "./cryptoService";
 import encodingService from "./encodingService";
-import { DecryptedMessageResult } from "./types";
-import { EncryptMessageResult } from "./types";
+import {
+  DecryptedMessageResult,
+  EncryptMessageResult,
+  ErrorType,
+  getError,
+} from "./types";
+import { catchAsyncError } from "./util";
 const IV_LENGTH = 12;
 const SALT_LENGTH = 12;
 
@@ -126,34 +131,38 @@ const encryptService = {
 
       return { success: true, decryptedMessage };
     } catch (error) {
-      return { success: false };
+      return getError(ErrorType.MessageDecryptionFailed);
     }
   },
   decryptMessageWithPassword: async (
     encryptedMessage: string,
     decryptionData: string,
     password: string
-  ) => {
-    const ivWithSalt = IV_LENGTH + SALT_LENGTH;
-    const decryptionDataBytes = encodingService.decodeBase64(decryptionData);
-    const iv = decryptionDataBytes.slice(0, IV_LENGTH);
-    const salt = decryptionDataBytes.slice(IV_LENGTH, ivWithSalt);
-    const encryptedKey = decryptionDataBytes.slice(ivWithSalt);
-    const keyFromPassword = await deriveKeyFromPassword(password, salt);
+  ): Promise<DecryptedMessageResult> => {
+    try {
+      const ivWithSalt = IV_LENGTH + SALT_LENGTH;
+      const decryptionDataBytes = encodingService.decodeBase64(decryptionData);
+      const iv = decryptionDataBytes.slice(0, IV_LENGTH);
+      const salt = decryptionDataBytes.slice(IV_LENGTH, ivWithSalt);
+      const encryptedKey = decryptionDataBytes.slice(ivWithSalt);
+      const keyFromPassword = await deriveKeyFromPassword(password, salt);
 
-    const decryptedKeyBytes = await cryptoService.decrypt(
-      iv,
-      keyFromPassword,
-      encryptedKey
-    );
-    const decryptionKey = await cryptoService.importAesKey(decryptedKeyBytes);
-    const decryptedMessage = await decryptMessage(
-      encryptedMessage,
-      decryptionKey,
-      iv
-    );
+      const [decryptedKeyError, decryptedKeyBytes] = await catchAsyncError(
+        cryptoService.decrypt(iv, keyFromPassword, encryptedKey)
+      );
+      if (decryptedKeyError) return getError(ErrorType.InvalidPassword);
 
-    return decryptedMessage;
+      const decryptionKey = await cryptoService.importAesKey(decryptedKeyBytes);
+      const decryptedMessage = await decryptMessage(
+        encryptedMessage,
+        decryptionKey,
+        iv
+      );
+
+      return { success: true, decryptedMessage };
+    } catch (error) {
+      return getError(ErrorType.MessageDecryptionFailed);
+    }
   },
 };
 

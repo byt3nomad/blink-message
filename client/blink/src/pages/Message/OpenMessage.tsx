@@ -41,7 +41,7 @@ const OpenMessage = ({
         } else {
           setMessage({
             success: false,
-            error: "Decryption of the message failed!",
+            error: decryptedMessageResult.errorMessage,
           });
         }
       } else {

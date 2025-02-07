@@ -16,3 +16,27 @@ export const formatDate = (date: number): string => {
     second: "2-digit",
   }).format(new Date(date));
 };
+
+export const catchAsyncError = <T>(
+  promise: Promise<T>
+): Promise<[undefined, T] | [Error]> => {
+  return promise
+    .then((data) => {
+      return [undefined, data] as [undefined, T];
+    })
+    .catch((error: Error) => {
+      return [error];
+    });
+};
+
+export const catchError = <T>(
+  fn: (...args: any[]) => T,
+  ...args: any[]
+): [undefined, T] | [Error] => {
+  try {
+    const result = fn(...args);
+    return [undefined, result];
+  } catch (error) {
+    return [error instanceof Error ? error : new Error(String(error))];
+  }
+};
