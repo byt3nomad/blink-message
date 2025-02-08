@@ -1,13 +1,15 @@
-import { Card, Heading, Spinner, Textarea } from "@chakra-ui/react";
+import { Card, Heading, Show, Spinner, Textarea } from "@chakra-ui/react";
 import { Button } from "../../components/ui/button";
 import { ClipboardButton, ClipboardRoot } from "../../components/ui/clipboard";
-import messageService from "@/core/messageService";
+import messageService, { MessageOpenResult } from "@/core/messageService";
 import { useEffect, useState } from "react";
 import { Alert } from "../../components/ui/alert";
 import { useLocation } from "react-router";
 import { Field } from "../../components/ui/field";
 import { DecryptedMessageResult } from "./types";
 import encryptService from "@/core/encryptService";
+import OpenMessageWithPassword from "./OpenMessageWithPassword";
+import OpenMessageWithoutPassword from "./OpenMessageWithoutPassword";
 
 interface OpenMessageProps {
   messageId: string;
@@ -18,74 +20,48 @@ const OpenMessage = ({
   messageId,
   handleCloseOpenedMessage,
 }: OpenMessageProps) => {
-  const [message, setMessage] = useState<DecryptedMessageResult | null>(null);
-  const decryptionKey = useLocation().hash.slice(1);
+  const decryptionData = useLocation().hash.slice(1);
+  const [messageResult, setMessageResult] = useState<MessageOpenResult | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchMessage = async () => {
-      const fetchedMessageResult = await messageService.getMessageContent(
+      const messageOpenedResult = await messageService.getMessageContent(
         messageId
       );
-
-      if (fetchedMessageResult.success) {
-        const decryptedMessageResult = await encryptService.decryptMessage(
-          fetchedMessageResult.encryptedMessage,
-          decryptionKey
-        );
-
-        if (decryptedMessageResult.success) {
-          setMessage({
-            success: true,
-            message: decryptedMessageResult.decryptedMessage,
-          });
-        } else {
-          setMessage({
-            success: false,
-            error: decryptedMessageResult.errorMessage,
-          });
-        }
-      } else {
-        setMessage({ success: false, error: fetchedMessageResult.error });
-      }
+      setMessageResult(messageOpenedResult);
     };
-
     fetchMessage();
   }, [messageId]);
 
-  if (!message) {
+  if (!messageResult) {
     return <Spinner />;
   }
 
-  if (!message.success) {
-    return <Alert maxW="700px" w="full" status="error" title={message.error} />;
+  if (!messageResult.success) {
+    return (
+      <Alert maxW="700px" w="full" status="error" title={messageResult.error} />
+    );
   }
-
   return (
     <>
-      <Heading textAlign={"center"}>Message Opened </Heading>
-      <Card.Root maxW="700px" w="full" size="sm">
-        <Card.Header>
-          <Heading>Message Content</Heading>
-        </Card.Header>
-        <Card.Body>
-          <Field helperText={`${message.message.length} characters.`}>
-            <Textarea
-              autoresize
-              readOnly={true}
-              variant={"subtle"}
-              value={message.message}
-            ></Textarea>
-          </Field>
-        </Card.Body>
-        <Card.Footer justifyContent={"flex-end"}>
-          <Button variant={"ghost"} onClick={handleCloseOpenedMessage}>
-            Close
-          </Button>
-          <ClipboardRoot value={message.message} timeout={1000}>
-            <ClipboardButton />
-          </ClipboardRoot>
-        </Card.Footer>
-      </Card.Root>
+      <Show
+        when={messageResult.encryptedWithPassword}
+        fallback={
+          <OpenMessageWithoutPassword
+            decryptionData={decryptionData}
+            encryptedMessage={messageResult.encryptedMessage}
+            handleCloseOpenedMessage={handleCloseOpenedMessage}
+          />
+        }
+      >
+        <OpenMessageWithPassword
+          decryptionData={decryptionData}
+          encryptedMessage={messageResult.encryptedMessage}
+          handleCloseOpenedMessage={handleCloseOpenedMessage}
+        />
+      </Show>
     </>
   );
 };

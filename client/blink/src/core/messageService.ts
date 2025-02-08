@@ -30,9 +30,10 @@ export type MessageInfoResult = MessageInfoSuccess | ErrorResult;
 type MessageOpenSuccess = {
   success: true;
   encryptedMessage: string;
+  encryptedWithPassword: boolean;
 };
 
-type MessageOpenResult = MessageOpenSuccess | ErrorResult;
+export type MessageOpenResult = MessageOpenSuccess | ErrorResult;
 const messageService = {
   createMessage: async (
     encryptedMessage: string,
@@ -84,6 +85,7 @@ const messageService = {
       return {
         success: true,
         encryptedMessage: response.data.encryptedMessage,
+        encryptedWithPassword: response.data.encryptedWithPassword,
       };
     } catch (e: any) {
       const defaultError = getErrorMessage(e);
