@@ -25,6 +25,7 @@ public class MessageService {
                 .id(NanoIdUtils.randomNanoId())
                 .encryptedMessage(request.encryptedMessage())
                 .createdAt(Instant.now())
+                .encryptedWithPassword(request.encryptedWithPassword())
                 .opened(false)
                 .build();
 
@@ -40,7 +41,8 @@ public class MessageService {
 
         var messageResponseBuilder = MessageInfoResponse.builder()
                 .opened(message.isOpened())
-                .createdAt(message.getCreatedAt().toEpochMilli());
+                .createdAt(message.getCreatedAt().toEpochMilli())
+                .encryptedWithPassword(message.isEncryptedWithPassword());
         if(message.isOpened()) {
             // If opened we will have openedAt time.
             var openedAt = message.getOpenedAt().orElseThrow(InvalidMessageData::new).toEpochMilli();

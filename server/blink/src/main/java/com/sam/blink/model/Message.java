@@ -36,6 +36,10 @@ public class Message {
     @Column(name = "opened_at")
     private Instant openedAt;
 
+    @Getter
+    @Column(name = "encrypted_with_password")
+    private boolean encryptedWithPassword;
+
     public Optional<String> getEncryptedMessage() {
         return Optional.ofNullable(encryptedMessage);
     }
