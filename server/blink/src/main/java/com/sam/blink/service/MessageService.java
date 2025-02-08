@@ -41,8 +41,7 @@ public class MessageService {
 
         var messageResponseBuilder = MessageInfoResponse.builder()
                 .opened(message.isOpened())
-                .createdAt(message.getCreatedAt().toEpochMilli())
-                .encryptedWithPassword(message.isEncryptedWithPassword());
+                .createdAt(message.getCreatedAt().toEpochMilli());
         if(message.isOpened()) {
             // If opened we will have openedAt time.
             var openedAt = message.getOpenedAt().orElseThrow(InvalidMessageData::new).toEpochMilli();
@@ -71,6 +70,6 @@ public class MessageService {
 
         messageRepository.save(message);
 
-        return new MessageOpenResponse(encryptedMessage);
+        return new MessageOpenResponse(encryptedMessage, message.isEncryptedWithPassword());
     }
 }
