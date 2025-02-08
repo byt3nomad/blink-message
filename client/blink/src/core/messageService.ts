@@ -35,10 +35,14 @@ type MessageOpenSuccess = {
 type MessageOpenResult = MessageOpenSuccess | ErrorResult;
 const messageService = {
   createMessage: async (
-    encryptedMessage: string
+    encryptedMessage: string,
+    encryptedWithPassword: boolean
   ): Promise<MessageCreateResult> => {
     try {
-      const response = await client.post("messages", { encryptedMessage });
+      const response = await client.post("messages", {
+        encryptedMessage,
+        encryptedWithPassword,
+      });
       if (response.data && response.data.id) {
         return { success: true, messageId: response.data.id };
       }

@@ -14,17 +14,17 @@ import { Link } from "react-router";
 
 interface CopyMessageProps {
   messageId: string;
-  encryptionKey: string;
+  decryptionData: string;
   createNewMessageClicked: () => void;
 }
 
 const CopyMessage = ({
-  encryptionKey,
+  decryptionData,
   messageId,
   createNewMessageClicked: createNewMessage,
 }: CopyMessageProps) => {
   const origin = window.location.origin;
-  const openMessageUrl = `${origin}/${messageId}#${encryptionKey}`;
+  const openMessageUrl = `${origin}/${messageId}#${decryptionData}`;
   const handleCreateNewMessageButton = () => {
     createNewMessage();
   };
