@@ -22,12 +22,12 @@ public class GlobalAdviceController {
                 LocalDateTime.now());
     }
 
-    @ExceptionHandler(MessageAlreadyOpened.class)
+    @ExceptionHandler(MessageDestroyed.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleMessageAlreadyOpened(MessageAlreadyOpened e) {
+    public ExceptionResponse handleMessageDestroyed(MessageDestroyed e) {
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Message already opened!",
+                "Message destroyed!",
                 LocalDateTime.now());
     }
 
@@ -63,12 +63,12 @@ public class GlobalAdviceController {
                 LocalDateTime.now());
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionResponse handleGlobalException(Exception e) {
-        return new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred!",
-                LocalDateTime.now());
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ExceptionResponse handleGlobalException(Exception e) {
+//        return new ExceptionResponse(
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                "An unexpected error occurred!",
+//                LocalDateTime.now());
+//    }
 }

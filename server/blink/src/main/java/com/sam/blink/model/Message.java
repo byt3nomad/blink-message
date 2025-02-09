@@ -1,11 +1,14 @@
 package com.sam.blink.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import com.sam.blink.exception.MessageDestroyed;
+import com.sam.blink.model.dto.MessageCreateRequest;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -18,33 +21,57 @@ public class Message {
     @Getter
     private String id;
 
-    @Setter
     @Column(name = "encrypted_message")
     private String encryptedMessage;
 
     @Getter
-    @Setter
-    @Column(name = "is_opened")
-    private boolean opened;
-
-    @Getter
-    @Setter
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    @Setter
-    @Column(name = "opened_at")
-    private Instant openedAt;
+    @Column(name = "destroyed_at")
+    private Instant destroyedAt;
 
     @Getter
-    @Column(name = "encrypted_with_password")
-    private boolean encryptedWithPassword;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "message_configuration_id", nullable = false)
+    private MessageConfiguration configuration;
 
-    public Optional<String> getEncryptedMessage() {
-        return Optional.ofNullable(encryptedMessage);
+    @Getter
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MessageView> views = new ArrayList<>();
+
+    public Optional<Instant> getDestroyedAt() {
+        return Optional.ofNullable(destroyedAt);
     }
 
-    public Optional<Instant> getOpenedAt() {
-        return Optional.ofNullable(openedAt);
+    public boolean isDestroyed() {
+        return this.encryptedMessage == null;
+    }
+
+    public String view() {
+        if (this.isDestroyed()) {
+            throw new MessageDestroyed();
+        }
+
+        var view = MessageView.from(this);
+        this.views.add(view);
+
+        var message = this.encryptedMessage;
+        if (this.views.size() >= this.configuration.getViewCount()) {
+            this.encryptedMessage = null;
+            this.destroyedAt = Instant.now();
+        }
+
+        return message;
+    }
+
+    public static Message from(MessageCreateRequest request) {
+        var configuration = MessageConfiguration.from(request.configuration());
+        return Message.builder()
+                .id(NanoIdUtils.randomNanoId())
+                .createdAt(Instant.now())
+                .encryptedMessage(request.encryptedMessage())
+                .configuration(configuration)
+                .build();
     }
 }
