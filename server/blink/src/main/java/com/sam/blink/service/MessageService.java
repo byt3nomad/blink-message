@@ -64,12 +64,22 @@ public class MessageService {
 
         var encryptedMessage = message.getEncryptedMessage();
         if (message.getViews().size() >= message.getConfiguration().getViewCount()) {
-            message.setEncryptedMessage(null);
-            message.setDestroyedAt(Instant.now());
+            destroyMessage(message);
         }
 
         repository.save(message);
         return new MessageOpenResponse(encryptedMessage, message.getConfiguration().isEncryptedWithPassword());
+    }
+
+    public void destroyExpiredMessages(){
+        var expiredMessages = repository.findAllExpiredMessages();
+        expiredMessages.forEach(this::destroyMessage);
+        repository.saveAll(expiredMessages);
+    }
+
+    private void destroyMessage(Message message) {
+        message.setEncryptedMessage(null);
+        message.setDestroyedAt(Instant.now());
     }
 
     private Message findOrThrow(String id) {

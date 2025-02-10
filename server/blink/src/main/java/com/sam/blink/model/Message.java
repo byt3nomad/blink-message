@@ -1,8 +1,5 @@
 package com.sam.blink.model;
 
-import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
-import com.sam.blink.exception.MessageDestroyed;
-import com.sam.blink.model.dto.MessageCreateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
