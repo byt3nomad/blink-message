@@ -1,6 +1,5 @@
 package com.sam.blink.model;
 
-import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,12 +24,4 @@ public class MessageView {
     @ManyToOne(optional = false)
     @JoinColumn(name = "message_id", nullable = false)
     private Message message;
-
-    public static MessageView from(Message message) {
-        return MessageView.builder()
-                .id(NanoIdUtils.randomNanoId())
-                .viewedAt(Instant.now())
-                .message(message)
-                .build();
-    }
 }

@@ -63,12 +63,12 @@ public class GlobalAdviceController {
                 LocalDateTime.now());
     }
 
-//    @ExceptionHandler(Exception.class)
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ExceptionResponse handleGlobalException(Exception e) {
-//        return new ExceptionResponse(
-//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                "An unexpected error occurred!",
-//                LocalDateTime.now());
-//    }
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse handleGlobalException(Exception e) {
+        return new ExceptionResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected error occurred!",
+                LocalDateTime.now());
+    }
 }

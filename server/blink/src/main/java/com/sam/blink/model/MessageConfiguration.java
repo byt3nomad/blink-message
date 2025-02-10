@@ -1,7 +1,5 @@
 package com.sam.blink.model;
 
-import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
-import com.sam.blink.model.dto.MessageConfigurationRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.Optional;
 
 @Builder
 @AllArgsConstructor
@@ -33,16 +30,4 @@ public class MessageConfiguration {
     @Column(name = "expire_at")
     private Instant expireAt;
 
-    public static MessageConfiguration from(MessageConfigurationRequest request) {
-        var expireAt = Optional.ofNullable(request.expireAt())
-                .map(Instant::ofEpochMilli)
-                .orElse(null);
-        return MessageConfiguration
-                .builder()
-                .id(NanoIdUtils.randomNanoId())
-                .encryptedWithPassword(request.encryptedWithPassword())
-                .viewCount(request.viewCount())
-                .expireAt(expireAt)
-                .build();
-    }
 }

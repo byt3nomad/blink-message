@@ -21,6 +21,8 @@ public class Message {
     @Getter
     private String id;
 
+    @Getter
+    @Setter
     @Column(name = "encrypted_message")
     private String encryptedMessage;
 
@@ -28,6 +30,7 @@ public class Message {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    @Setter
     @Column(name = "destroyed_at")
     private Instant destroyedAt;
 
@@ -42,36 +45,5 @@ public class Message {
 
     public Optional<Instant> getDestroyedAt() {
         return Optional.ofNullable(destroyedAt);
-    }
-
-    public boolean isDestroyed() {
-        return this.encryptedMessage == null;
-    }
-
-    public String view() {
-        if (this.isDestroyed()) {
-            throw new MessageDestroyed();
-        }
-
-        var view = MessageView.from(this);
-        this.views.add(view);
-
-        var message = this.encryptedMessage;
-        if (this.views.size() >= this.configuration.getViewCount()) {
-            this.encryptedMessage = null;
-            this.destroyedAt = Instant.now();
-        }
-
-        return message;
-    }
-
-    public static Message from(MessageCreateRequest request) {
-        var configuration = MessageConfiguration.from(request.configuration());
-        return Message.builder()
-                .id(NanoIdUtils.randomNanoId())
-                .createdAt(Instant.now())
-                .encryptedMessage(request.encryptedMessage())
-                .configuration(configuration)
-                .build();
     }
 }
