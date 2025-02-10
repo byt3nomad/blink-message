@@ -27,7 +27,6 @@ public class MessageConfiguration {
     private int viewCount;
 
     @Getter
-    @Column(name = "expire_at")
-    private Instant expireAt;
-
+    @Column(name = "destroy_at")
+    private Instant destroyAt;
 }

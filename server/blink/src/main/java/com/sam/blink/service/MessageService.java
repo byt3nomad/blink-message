@@ -72,7 +72,7 @@ public class MessageService {
     }
 
     public void destroyExpiredMessages(){
-        var expiredMessages = repository.findAllExpiredMessages();
+        var expiredMessages = repository.findAllMessagesForDestruction();
         expiredMessages.forEach(this::destroyMessage);
         repository.saveAll(expiredMessages);
     }
@@ -89,7 +89,7 @@ public class MessageService {
     }
 
     private MessageConfiguration buildMessageConfiguration(MessageConfigurationRequest request) {
-        var expireAt = Optional.ofNullable(request.expireAt())
+        var destroyAt = Optional.ofNullable(request.destroyAt())
                 .map(expire -> {
                     var expireInstant = Instant.ofEpochMilli(expire);
                     if (expireInstant.isBefore(Instant.now())) {
@@ -103,17 +103,17 @@ public class MessageService {
                 .id(NanoIdUtils.randomNanoId())
                 .encryptedWithPassword(request.encryptedWithPassword())
                 .viewCount(request.viewCount())
-                .expireAt(expireAt)
+                .destroyAt(destroyAt)
                 .build();
     }
 
     private MessageConfigurationResponse toMessageConfigurationResponse(MessageConfiguration configuration) {
-        var expireAt = Optional.ofNullable(configuration.getExpireAt()).map(Instant::toEpochMilli).orElse(null);
+        var destroyAt = Optional.ofNullable(configuration.getDestroyAt()).map(Instant::toEpochMilli).orElse(null);
         return MessageConfigurationResponse
                 .builder()
                 .encryptedWithPassword(configuration.isEncryptedWithPassword())
                 .viewCount(configuration.getViewCount())
-                .expireAt(expireAt)
+                .destroyAt(destroyAt)
                 .build();
     }
 

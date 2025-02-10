@@ -5,5 +5,5 @@ import lombok.Builder;
 @Builder
 public record MessageConfigurationResponse(boolean encryptedWithPassword,
                                            int viewCount,
-                                           Long expireAt) {
+                                           Long destroyAt) {
 }

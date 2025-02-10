@@ -10,5 +10,5 @@ public record MessageConfigurationRequest(
         @Max(value = 100, message = "viewCount must be less than or equal to 100")
         int viewCount,
 
-        Long expireAt) {
+        Long destroyAt) {
 }
