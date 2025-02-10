@@ -4,7 +4,14 @@ import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import encryptService from "@/core/encryptService";
 import messageService from "@/core/messageService";
-import { Box, Card, Collapsible, Heading, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  Collapsible,
+  Heading,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { BsShieldLock } from "react-icons/bs";
 import { CreatedMessage } from "./types";
@@ -17,21 +24,33 @@ interface CreateFormProps {
 
 const CreateForm = ({ onSuccess }: CreateFormProps) => {
   const [message, setMessage] = useState("");
+  const [expireAtValue, setExpireAtValue] = useState<string>("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const minExpireAtValue = new Date().toISOString().slice(0, 16);
   const [submitting, setSubmitting] = useState(false);
+  const [invalidExpireAtValue, setInvalidExpireAtValue] = useState(false);
+  const [viewCount, setViewCount] = useState(1);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setSubmitting(true);
     e.preventDefault();
     setError(null);
 
+    const expireAt = new Date(expireAtValue);
+
+    if (new Date() >= expireAt) setInvalidExpireAtValue(true);
+    else setInvalidExpireAtValue(false);
+
     const { encryptedMessage, decryptionData } = password
       ? await encryptService.encryptMessageWithPassword(message, password)
       : await encryptService.encryptMessage(message);
+
     const response = await messageService.createMessage(
       encryptedMessage,
-      Boolean(password)
+      Boolean(password),
+      viewCount,
+      expireAt.getTime()
     );
 
     if (response.success) {
@@ -41,7 +60,6 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
     }
 
     setSubmitting(false);
-    setMessage("");
   };
 
   return (
@@ -74,6 +92,28 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
                     minLength={3}
                     maxLength={128}
                     onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Field>
+                <Field
+                  mt={"5"}
+                  label="Expire at"
+                  invalid={invalidExpireAtValue}
+                  errorText="The expiration date must be later than the current time."
+                >
+                  <Input
+                    type="datetime-local"
+                    value={expireAtValue}
+                    min={minExpireAtValue}
+                    onChange={(e) => setExpireAtValue(e.target.value)}
+                  />
+                </Field>
+                <Field mt={"5"} label="View count">
+                  <Input
+                    type="number"
+                    min={1}
+                    max={100}
+                    value={viewCount}
+                    onChange={(e) => setViewCount(Number(e.target.value))}
                   />
                 </Field>
               </Collapsible.Content>

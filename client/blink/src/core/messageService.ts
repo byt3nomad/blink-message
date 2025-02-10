@@ -37,12 +37,18 @@ export type MessageOpenResult = MessageOpenSuccess | ErrorResult;
 const messageService = {
   createMessage: async (
     encryptedMessage: string,
-    encryptedWithPassword: boolean
+    encryptedWithPassword: boolean,
+    viewCount: number,
+    expireAt: number | null
   ): Promise<MessageCreateResult> => {
     try {
       const response = await client.post("messages", {
         encryptedMessage,
-        encryptedWithPassword,
+        configuration: {
+          encryptedWithPassword,
+          viewCount,
+          expireAt,
+        },
       });
       if (response.data && response.data.id) {
         return { success: true, messageId: response.data.id };
