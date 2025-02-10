@@ -38,7 +38,7 @@ public class MessageService {
         var message = findOrThrow(id);
 
         var configuration = toMessageConfigurationResponse(message.getConfiguration());
-        var views = message.getViews().stream()
+        var viewTimestamps = message.getViews().stream()
                 .map(view -> view.getViewedAt().toEpochMilli())
                 .toList();
         var destroyedAt = message.getDestroyedAt().map(Instant::toEpochMilli).orElse(null);
@@ -47,7 +47,7 @@ public class MessageService {
                 .createdAt(message.getCreatedAt().toEpochMilli())
                 .destroyed(isMessageDestroyed(message))
                 .destroyedAt(destroyedAt)
-                .views(views)
+                .viewTimestamps(viewTimestamps)
                 .configuration(configuration)
                 .build();
     }

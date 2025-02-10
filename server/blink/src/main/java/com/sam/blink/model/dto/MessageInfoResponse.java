@@ -8,6 +8,6 @@ import java.util.List;
 public record MessageInfoResponse(long createdAt,
                                   boolean destroyed,
                                   Long destroyedAt,
-                                  List<Long> views,
+                                  List<Long> viewTimestamps,
                                   MessageConfigurationResponse configuration) {
 }
