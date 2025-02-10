@@ -40,6 +40,15 @@ public class GlobalAdviceController {
                 LocalDateTime.now());
     }
 
+    @ExceptionHandler(InvalidExpirationTimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleInvalidExpireAtException(InvalidExpirationTimeException e) {
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "The set expireAt time is before the message creation.",
+                LocalDateTime.now());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {

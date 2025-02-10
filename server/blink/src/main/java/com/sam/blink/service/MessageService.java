@@ -1,6 +1,7 @@
 package com.sam.blink.service;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import com.sam.blink.exception.InvalidExpirationTimeException;
 import com.sam.blink.exception.MessageDestroyed;
 import com.sam.blink.exception.MessageNotFound;
 import com.sam.blink.model.Message;
@@ -79,7 +80,13 @@ public class MessageService {
 
     private MessageConfiguration buildMessageConfiguration(MessageConfigurationRequest request) {
         var expireAt = Optional.ofNullable(request.expireAt())
-                .map(Instant::ofEpochMilli)
+                .map(expire -> {
+                    var expireInstant = Instant.ofEpochMilli(expire);
+                    if (expireInstant.isBefore(Instant.now())) {
+                        throw new InvalidExpirationTimeException();
+                    }
+                    return expireInstant;
+                })
                 .orElse(null);
         return MessageConfiguration
                 .builder()
