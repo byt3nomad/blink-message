@@ -18,11 +18,17 @@ type ErrorResult = {
 
 export type MessageCreateResult = MessageCreateSuccess | ErrorResult;
 
-type MessageInfoSuccess = {
+export type MessageInfoSuccess = {
   success: true;
-  opened: boolean;
   createdAt: number;
-  openedAt: number | null;
+  destroyed: boolean;
+  destroyedAt: number | null;
+  viewTimestamps: number[];
+  configuration: {
+    encryptedWithPassword: boolean;
+    viewCount: number;
+    destroyAt: number | null;
+  };
 };
 
 export type MessageInfoResult = MessageInfoSuccess | ErrorResult;
@@ -39,7 +45,7 @@ const messageService = {
     encryptedMessage: string,
     encryptedWithPassword: boolean,
     viewCount: number,
-    expireAt: number | null
+    destroyAt: number | null
   ): Promise<MessageCreateResult> => {
     try {
       const response = await client.post("messages", {
@@ -47,7 +53,7 @@ const messageService = {
         configuration: {
           encryptedWithPassword,
           viewCount,
-          expireAt,
+          destroyAt,
         },
       });
       if (response.data && response.data.id) {
@@ -67,9 +73,11 @@ const messageService = {
 
       return {
         success: true,
-        opened: response.data.opened,
         createdAt: response.data.createdAt,
-        openedAt: response.data.openedAt,
+        destroyed: response.data.destroyed,
+        destroyedAt: response.data.destroyedAt,
+        viewTimestamps: response.data.viewTimestamps,
+        configuration: response.data.configuration,
       };
     } catch (e: any) {
       if (e.response && e.response.data?.message) {

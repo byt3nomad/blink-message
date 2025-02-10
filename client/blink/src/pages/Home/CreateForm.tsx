@@ -24,12 +24,12 @@ interface CreateFormProps {
 
 const CreateForm = ({ onSuccess }: CreateFormProps) => {
   const [message, setMessage] = useState("");
-  const [expireAtValue, setExpireAtValue] = useState<string>("");
+  const [destroyAtValue, setDestroyAtValue] = useState<string>("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const minExpireAtValue = new Date().toISOString().slice(0, 16);
+  const minDestroyAtValue = new Date().toISOString().slice(0, 16);
   const [submitting, setSubmitting] = useState(false);
-  const [invalidExpireAtValue, setInvalidExpireAtValue] = useState(false);
+  const [invalidDestroyAtValue, setInvalidDestroyAtValue] = useState(false);
   const [viewCount, setViewCount] = useState(1);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,10 +37,13 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
     e.preventDefault();
     setError(null);
 
-    const expireAt = new Date(expireAtValue);
+    const destroyAt = new Date(destroyAtValue);
 
-    if (new Date() >= expireAt) setInvalidExpireAtValue(true);
-    else setInvalidExpireAtValue(false);
+    if (new Date() >= destroyAt) {
+      setInvalidDestroyAtValue(true);
+      setSubmitting(false);
+      return;
+    } else setInvalidDestroyAtValue(false);
 
     const { encryptedMessage, decryptionData } = password
       ? await encryptService.encryptMessageWithPassword(message, password)
@@ -50,7 +53,7 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
       encryptedMessage,
       Boolean(password),
       viewCount,
-      expireAt.getTime()
+      destroyAt.getTime()
     );
 
     if (response.success) {
@@ -96,15 +99,15 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
                 </Field>
                 <Field
                   mt={"5"}
-                  label="Expire at"
-                  invalid={invalidExpireAtValue}
-                  errorText="The expiration date must be later than the current time."
+                  label="Destroy at"
+                  invalid={invalidDestroyAtValue}
+                  errorText="The destruction date must be later than the current time."
                 >
                   <Input
                     type="datetime-local"
-                    value={expireAtValue}
-                    min={minExpireAtValue}
-                    onChange={(e) => setExpireAtValue(e.target.value)}
+                    value={destroyAtValue}
+                    min={minDestroyAtValue}
+                    onChange={(e) => setDestroyAtValue(e.target.value)}
                   />
                 </Field>
                 <Field mt={"5"} label="View count">
