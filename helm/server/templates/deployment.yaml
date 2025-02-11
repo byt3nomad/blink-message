@@ -16,8 +16,8 @@ spec:
       labels:
         app: {{ .Values.label.app }}
         component: {{ .Values.label.component }}
-        annotations:
-          "helm.sh/revision": "{{ .Release.Revision }}"
+      annotations:
+        "helm.sh/revision": "{{ .Release.Revision }}"
     spec:
       containers:
       - name: spring
