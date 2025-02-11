@@ -16,10 +16,13 @@ spec:
       labels:
         app: {{ .Values.label.app }}
         component: {{ .Values.label.component }}
+        annotations:
+          "helm.sh/revision": "{{ .Release.Revision }}"
     spec:
       containers:
       - name: spring
         image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        imagePullPolicy:   {{ .Values.image.pullPolicy }}
         env:
         - name: DB_URL
           valueFrom:
