@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends CrudRepository<Message, String> {
-    @Query("SELECT m FROM Message m JOIN m.configuration c where CURRENT_TIMESTAMP >= c.destroyAt")
+    @Query("SELECT m FROM Message m JOIN m.configuration c where CURRENT_TIMESTAMP >= c.destroyAt AND m.encryptedMessage IS NOT NULL")
     List<Message> findAllMessagesForDestruction();
 }

@@ -14,6 +14,6 @@ public class MessageScheduler {
     @Scheduled(cron = "0 * * * * *")
     public void destroyExpiredMessages() {
         log.info("Destroying expired messages job started.");
-        messageService.destroyExpiredMessages();
+        messageService.destroyMessagesForDestruction();
     }
 }

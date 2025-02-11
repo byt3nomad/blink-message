@@ -73,13 +73,16 @@ public class MessageService {
         return new MessageOpenResponse(encryptedMessage, message.getConfiguration().isEncryptedWithPassword());
     }
 
-    public void destroyExpiredMessages(){
+    public void destroyMessagesForDestruction(){
         var expiredMessages = repository.findAllMessagesForDestruction();
         expiredMessages.forEach(this::destroyMessage);
         repository.saveAll(expiredMessages);
     }
 
     private void destroyMessage(Message message) {
+        if(isMessageDestroyed(message)) {
+            return;
+        }
         message.setEncryptedMessage(null);
         message.setDestroyedAt(Instant.now());
     }
