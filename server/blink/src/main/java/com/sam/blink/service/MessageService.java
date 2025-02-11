@@ -11,11 +11,13 @@ import com.sam.blink.model.dto.*;
 import com.sam.blink.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MessageService {
     private final MessageRepository repository;

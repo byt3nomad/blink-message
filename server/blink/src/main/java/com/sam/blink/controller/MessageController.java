@@ -5,7 +5,6 @@ import com.sam.blink.model.dto.MessageCreateResponse;
 import com.sam.blink.model.dto.MessageInfoResponse;
 import com.sam.blink.model.dto.MessageOpenResponse;
 import com.sam.blink.service.MessageService;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class MessageController {
     private final MessageService messageService;
 
-    @Transactional
     @PostMapping("/api/v1/messages")
     public MessageCreateResponse create(@RequestBody @Valid MessageCreateRequest messageRequest) {
         return messageService.create(messageRequest);
     }
 
-    @Transactional
     @GetMapping("/api/v1/messages/{id}/info")
     public MessageInfoResponse getMessageInfo(@PathVariable String id) {
         return messageService.getMessageInfo(id);
