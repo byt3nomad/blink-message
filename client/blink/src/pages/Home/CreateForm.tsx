@@ -123,7 +123,7 @@ const CreateForm = ({ onSuccess }: CreateFormProps) => {
             </Card.Body>
             <Card.Footer mt={"4"} justifyContent="space-between">
               <Collapsible.Trigger>
-                <Button colorPalette={"cyan"} variant="outline">
+                <Button colorPalette={"teal"} variant="outline">
                   <BsShieldLock /> Advanced Options
                 </Button>
               </Collapsible.Trigger>
