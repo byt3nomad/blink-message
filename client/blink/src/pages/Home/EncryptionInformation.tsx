@@ -10,7 +10,7 @@ import { LuExternalLink } from "react-icons/lu";
 const EncryptionInformation = () => {
   return (
     <Box w={"full"}>
-      <Heading>Encryption With Password</Heading>
+      <Heading>Encryption Process</Heading>
       <AccordionRoot collapsible defaultValue={["genKey"]}>
         <AccordionItem value={"genKey"}>
           <AccordionItemTrigger>Generate key</AccordionItemTrigger>
@@ -65,8 +65,7 @@ const EncryptionInformation = () => {
           <AccordionItemTrigger>Encrypt the Message Key</AccordionItemTrigger>
           <AccordionItemContent>
             We then use the key derived from your password to encrypt the
-            original AES key that secured your message. Only someone with the
-            correct password can later decrypt this key.
+            original AES key that secured your message.
             <br />
             <Link
               target="_blank"
@@ -84,9 +83,14 @@ const EncryptionInformation = () => {
             Embed Decryption Data in the URL
           </AccordionItemTrigger>
           <AccordionItemContent>
-            Finally, we bundle the encrypted message key along with its
-            initialization vector (IV) and salt into a single byte array. This
+            We then transform the encrypted message key into a byte array. This
             array is then encoded in Base64 and appended to the URL.
+          </AccordionItemContent>
+        </AccordionItem>
+        <AccordionItem value={"server"}>
+          <AccordionItemTrigger>Send Encrypted Message</AccordionItemTrigger>
+          <AccordionItemContent>
+            Finally we send only the encrypted message to the server.
           </AccordionItemContent>
         </AccordionItem>
         <AccordionItem value={"decryptionMes"}>
@@ -96,6 +100,15 @@ const EncryptionInformation = () => {
             URL, the user must first enter the correct password. This password
             is used to derive a decryption key that unlocks the encrypted
             message key, which in turn decrypts your message.
+          </AccordionItemContent>
+        </AccordionItem>
+        <AccordionItem value={"question"}>
+          <AccordionItemTrigger>Quick Overview</AccordionItemTrigger>
+          <AccordionItemContent>
+            All encryption and decryption happens right in your browser. The
+            decryption data is stored only in the URL. This means your messages
+            are transmitted to the server already encrypted, so even if the
+            server is compromised, your messages remain unreadable.
           </AccordionItemContent>
         </AccordionItem>
       </AccordionRoot>
