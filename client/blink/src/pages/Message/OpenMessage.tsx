@@ -1,4 +1,4 @@
-import messageService, { MessageOpenResult } from "@/core/messageService";
+import messageService, { MessageViewResult } from "@/core/messageService";
 import { Show, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
@@ -16,16 +16,14 @@ const OpenMessage = ({
   handleCloseOpenedMessage,
 }: OpenMessageProps) => {
   const decryptionData = useLocation().hash.slice(1);
-  const [messageResult, setMessageResult] = useState<MessageOpenResult | null>(
+  const [messageResult, setMessageResult] = useState<MessageViewResult | null>(
     null
   );
 
   useEffect(() => {
     const fetchMessage = async () => {
-      const messageOpenedResult = await messageService.getMessageContent(
-        messageId
-      );
-      setMessageResult(messageOpenedResult);
+      const messageViewResult = await messageService.viewMessage(messageId);
+      setMessageResult(messageViewResult);
     };
     fetchMessage();
   }, [messageId]);
