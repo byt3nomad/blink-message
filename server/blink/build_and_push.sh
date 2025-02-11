@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set variables
-IMAGE_NAME="blink-client"
-TAG=1.7
+IMAGE_NAME="blink-server"
+TAG=1.3
 REGISTRY="danchoivlado"
 
 # Build the image with the specified tag
